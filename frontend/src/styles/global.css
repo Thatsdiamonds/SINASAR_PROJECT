@@ -1,0 +1,67 @@
+* {
+    margin: 0;
+}
+
+@font-face {
+  font-family: 'Pixel Operator 8';
+  src: url('@/fonts/PIXELOPERATOR8.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+    font-family: 'Minecraft Standard';
+    src: url('@/fonts/MinecraftStandard.otf') format('opentype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Minecraft";
+    src: url("@/fonts/MINECRAFTSTANDARD.OTF") format("opentype");
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Minecraft Medium";
+    src: url("@/fonts/MINECRAFT.TTF") format("opentype");
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+  font-family: 'Title';
+  src: url('@/fonts/PressStart2P-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+    font-family: "Minecraft Bold";
+    src: url("@/fonts/MINECRAFTSTANDARDBOLD.OTF") format("opentype");
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Minecraft Bold Oblique";
+    src: url("@/fonts/MINECRAFTSTANDARDBOLDOBLIQUE.OTF") format("opentype");
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Minecraft Oblique";
+    src: url("@/fonts/MINECRAFTSTANDARDOBLIQUE.OTF") format("opentype");
+    font-weight: 400;
+    font-style: normal;
+}
+
+
+@font-face {
+  font-family: 'Pixel Operator';
+  src: url('@/fonts/PixelOperator.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}

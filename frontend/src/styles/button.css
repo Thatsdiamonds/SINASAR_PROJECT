@@ -1,0 +1,79 @@
+.button {
+  /* Warnaaaa Rawr */
+  --border-color: #222;
+  --bg-color: #fff;
+  --color: #000;
+  --sub-color: #3333339a;
+  --border-hov: #15A1C8;
+  --bg-hov: transparent;
+
+  all: unset;
+  display: inline-flex;
+  height: fit-content;
+  align-items: center;
+  width: fit-content;
+  border-radius: 0;
+  padding: .8rem 1.4rem;
+  gap: .8rem;
+  border: 2px solid var(--border-color);
+  box-shadow: 0 0 0 2px #fff, 4px 4px 0 0 var(--border-color);
+  background: var(--bg-color);
+  color: var(--color);
+  cursor: pointer;
+  transition: 
+    background 0.15s,
+    box-shadow 0.1s,
+    border-color 0.1s;
+  justify-content: center;
+  flex-wrap: nowrap;
+}
+
+.button:not(:has(.text a:nth-child(2))) {
+  padding: .6rem 1.2rem;
+  font-size: .8rem;
+  min-width: unset;
+  box-shadow: 0 0 0 2px #fff, 2px 2px 0 0 #1E3445;
+}
+
+.button:hover {
+  background-color: var(--bg-hov);
+  border-color: var(--border-hov);
+  box-shadow: 0 0 0 2px #fff, 6px 6px 0 0 #15A1C8;
+}
+
+.button:active {
+  background: #b3e6ff;
+  border-color: var(--border-hov);
+  box-shadow: 0 0 0 2px #fff, 2px 2px 0 0 #1E3445;
+  transform: translate(2px, 2px);
+}
+
+.button .text {
+  width: fit-content;
+  display: inline-flex; /* biar ukuran ngikut isi */
+  flex-direction: column; /* teks sebar ke kanan, bukan ke bawah */
+  justify-content: flex-start;
+  font-family: 'Minecraft Standard', sans-serif;
+  font-weight: 400;
+  line-height: 1;
+  font-size: .7rem;
+  gap: .5rem; /* jarak antar teks biar rapi */
+  white-space: nowrap; /* biar teks gak turun ke line baru */
+}
+
+.button .text a {
+  all: unset;
+  display: inline-block; /* biar fit-content jalan */
+  width: fit-content;
+  cursor: pointer;
+  font-family: inherit;
+  letter-spacing: 1px;
+  white-space: nowrap; /* penting, no wrap baby */
+}
+
+.button .text a:nth-child(2) {
+  font-family: 'Pixel Operator', monospace;
+  font-style: normal;
+  font-size: 1rem;
+  color: var(--sub-color);
+}
