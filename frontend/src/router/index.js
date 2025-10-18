@@ -43,9 +43,38 @@ const router = createRouter({
     },
     {
       path: '/admin/register',
+      name: 'Register for Admins',
+      component: () => import('@/views/auth-nextgen.vue'),
+      meta: { role: 'admin' },
+      beforeEnter: (to, from, next) => {
+        if (!to.query['auth-type']) {
+          next({ 
+            path: to.path, 
+            query: { ...to.query, 'auth-type': 'sign-up' }
+          })
+        } else {
+            next()
+        }
+  }
+    },
+    {
+      path: '/register',
       name: 'Register',
-      component: () => import('@/views/admin/register.vue'),
-      meta: { role: 'admin' }
+      component: () => import('@/views/auth-nextgen.vue'),
+      beforeEnter: (to, from, next) => {
+        if (!to.query['auth-type']) {
+          next({ 
+            path: to.path, 
+            query: { ...to.query, 'auth-type': 'sign-up' }
+          })
+        } else {
+            next()
+        }
+      }},
+    {
+      path: '/auth',
+      name: 'AuthNextGen',
+      component: () => import('@/views/auth-nextgen.vue'),
     },
     {
       path: '/admin',
@@ -78,7 +107,7 @@ router.beforeEach(async (to, from, next) => {
     return next()
   }
 
-  if (to.path === '/' || to.path === '/login' || to.name === 'Kios Desc' || to.path.startsWith('/detail-kios')) {
+  if (to.path === '/' || to.path === '/login' || to.name === 'Kios Desc' || to.name === 'Register' || to.path === '/auth'   || to.path.startsWith('/detail-kios')) {
     return next()
   }
 

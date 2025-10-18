@@ -6,7 +6,7 @@ import router from './router'
 
 import 'vue-toast-notification/dist/theme-bootstrap.css'
 import '@/styles/global.css'
-import toast from '@/services/toast'
+import '@/styles/button.css'
 
 const app = createApp(App)
 const pinia = createPinia()

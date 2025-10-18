@@ -468,7 +468,12 @@ const selectKiosFromSearch = (penjual) => {
   if (penjual && penjual.lokasi) {
     penjualCache.value[penjual.lokasi] = penjual;
   }
-  toast.success(`Kios ${penjual.lokasi} dipilih dari daftar`);
+
+  if (penjual.lokasi) {
+    toast.success(`Kios ${penjual.lokasi} dipilih dari daftar`);
+  } else {
+    toast.success(`Pengguna ${penjual.nama} dipilih dari daftar`);
+  }
 };
 
 // Reset semua panel ke state awal
@@ -1113,8 +1118,9 @@ const removeFotoKiosDraft = () => {
               <button 
                 type="button" 
                 class="password-toggle-btn"
-                @click="showPassword = !showPassword">
-                <img src="/icons/Eye.svg" alt="Toggle" width="16" height="16">
+                @click="showPassword = !showPassword"
+                title="Tampilkan/Sembunyikan Password">
+                <img :src="showPassword ? '/icons/Eye.svg' : '/icons/noEye.svg'" alt="Toggle" width="16" height="16">
               </button>
           </div>
             <span v-if="errors.password" class="error-message">{{ errors.password }}</span>
@@ -1131,8 +1137,9 @@ const removeFotoKiosDraft = () => {
               <button 
                 type="button" 
                 class="password-toggle-btn"
-                @click="showConfirmPassword = !showConfirmPassword">
-                <img src="/icons/Eye.svg" alt="Toggle" width="16" height="16">
+                @click="showConfirmPassword = !showConfirmPassword"
+                title="Tampilkan/Sembunyikan Password">
+                <img :src="showConfirmPassword ? '/icons/Eye.svg' : '/icons/noEye.svg'" alt="Toggle" width="16" height="16">
               </button>
         </div>
             <span v-if="errors.confirmPassword" class="error-message">{{ errors.confirmPassword }}</span>
@@ -1311,16 +1318,8 @@ const removeFotoKiosDraft = () => {
 </div>
 </template>
 
-<style setup>
+<style scoped>
 @import '@/styles/button.css';
-
-.body-wrapper {
-  padding: 2.4rem;
-}
-
-:root {
-  --container-border-color: #00000020;
-}
 
 @font-face {
   font-family: 'Press Start 2P';
@@ -1328,7 +1327,18 @@ const removeFotoKiosDraft = () => {
   font-weight: 400;
   font-style: normal;
 }
-
+@font-face {
+  font-family: 'Pixel Operator';
+  src: url('@/fonts/PixelOperator.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Minecraft';
+  src: url('@/fonts/minecraft.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
 @font-face {
   font-family: 'Minecraft Standard';
   src: url('@/fonts/MinecraftStandard.otf') format('opentype');
@@ -1336,18 +1346,9 @@ const removeFotoKiosDraft = () => {
   font-style: normal;
 }
 
-@font-face {
-  font-family: 'Minecraft';
-  src: url('@/fonts/minecraft.ttf') format('truetype');
-  font-weight: 400;
-  font-style: normal;
-}
 
-@font-face {
-  font-family: 'Pixel Operator';
-  src: url('@/fonts/PixelOperator.ttf') format('truetype');
-  font-weight: 400;
-  font-style: normal;
+.body-wrapper {
+  padding: 2.4rem;
 }
 
 .marginbttm {
@@ -1456,9 +1457,6 @@ const removeFotoKiosDraft = () => {
   align-items: stretch;
   flex-wrap: wrap;
 }
-</style>
-
-<style scoped>
 
 .kios-list {
   padding-right: 1rem;
@@ -1684,43 +1682,33 @@ const removeFotoKiosDraft = () => {
   position: relative;
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: .4rem;
 }
 
 .password-input-container input {
-  padding-right: 3.4rem;
+  width: 100%;
 }
 
 .password-toggle-btn {
+  all: unset;
   position: absolute;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 0;
+  right: .2rem;
   font-family: 'Pixel Operator', sans-serif;
   font-size: 0.9rem;
-  border: 2px solid #b0bec5;
-  background: #fff;
   padding: 0.3rem 0.6rem;
   cursor: pointer;
-  transition: background 0.15s, border 0.15s;
-  z-index: 10;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
-  height: 100%;
-}
-
-.password-toggle-btn:hover {
-  background: #f0f0f0;
-  border-color: #19a7a7;
+  height: 78%;
 }
 
 .password-toggle-btn img {
   opacity: 0.8;
   transition: opacity 0.2s;
-  width: 14px;
-  height: 14px;
+  width: 18px;
+  height: 18px;
 }
 
 .password-toggle-btn:hover img {

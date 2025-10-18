@@ -1,0 +1,117 @@
+<!-- For halaman login, ror gabut ni orang ancen -->
+<template>
+  <button
+    :class="['app-btn', type, { loading, success, error }]"
+    :disabled="loading"
+    @click="$emit('click')"
+  >
+    <!-- State: Loading -->
+    <div v-if="loading" class="loading-container">
+      <Spinner
+        :color="spinnerColor"
+        :size="spinnerSize"
+        :message="loadingText"
+        layout="horizontal"
+      />
+    </div>
+
+    <!-- State: Success -->
+    <span v-else-if="success">{{ successText }}</span>
+
+    <!-- State: Error -->
+    <span v-else-if="error">{{ errorText }}</span>
+
+    <!-- State: Default -->
+    <span v-else>{{ label }}</span>
+  </button>
+</template>
+
+<script setup>
+import Spinner from './Spinner.vue'
+
+defineProps({
+  label: { type: String, default: 'Simpan' },
+  loading: { type: Boolean, default: false },
+  success: { type: Boolean, default: false },
+  error: { type: Boolean, default: false },
+
+  type: {
+    type: String,
+    default: 'primary', // primary | secondary | danger | etc.
+  },
+  spinnerColor: {
+    type: String,
+    default: 'white',
+  },
+  spinnerSize: {
+    type: String,
+    default: '20px',
+  },
+  loadingText: {
+    type: String,
+    default: 'Memproses...',
+  },
+  successText: {
+    type: String,
+    default: 'Tersimpan ✅',
+  },
+  errorText: {
+    type: String,
+    default: 'Gagal ❌',
+  },
+})
+</script>
+
+<style scoped>
+@font-face {
+  font-family: 'Minecraft Standard';
+  src: url('@/fonts/MinecraftStandard.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+}
+.app-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: "Minecraft Standard", sans-serif;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 20px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 120px;
+
+}
+span {
+  font-family: "Minecraft Medium";
+  transform: translateY(1px);
+}
+
+/* Variasi style */
+.app-btn.primary {
+  background: #15a1cb;
+  color: white;
+}
+.app-btn.buttonSubmit {
+  background: #15a1cb;
+  color: white;
+}
+.app-btn.buttonSubmit2 {
+  background: #00a846;
+  color: white;
+}
+.app-btn.primary:hover {
+  background: #187bcd;
+}
+
+.app-btn.secondary {
+  background: #e6e6e6;
+  color: #222;
+}
+.app-btn.secondary:hover {
+  background: #d9d9d9;
+}
+</style>

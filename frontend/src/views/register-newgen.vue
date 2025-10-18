@@ -1,13 +1,13 @@
 <template>
-<div class="login-body">
-    <main class="login-main">
-        <div class="login-card">
+<div class="register-body">
+    <main class="register-main">
+        <div class="register-card">
             <div class="card-title">
-                <h2>Login</h2>
-                <p>Masukkan username dan password untuk masuk.</p>
+                <h2>Register</h2>
+                <p>Buat akun baru untuk mengakses semua fitur.</p>
             </div>
-            <div class="login-form">
-                <form @submit.prevent="handleLogin">
+            <div class="register-form">
+                <form @submit.prevent="handleRegister">
                     <!-- Username Field -->
                     <label for="username" class="field-label">Username</label>
                     <div class="input-group">
@@ -16,7 +16,20 @@
                             type="text"
                             name="username"
                             class="form-control"
-                            placeholder="Masukkan username/email"
+                            placeholder="Masukkan username"
+                            required
+                        />
+                    </div>
+
+                    <!-- Email Field -->
+                    <label for="email" class="field-label">Email</label>
+                    <div class="input-group">
+                        <input
+                            v-model="email"
+                            type="email"
+                            name="email"
+                            class="form-control"
+                            placeholder="Masukkan email"
                             required
                         />
                     </div>
@@ -39,19 +52,30 @@
                             <label for="show-pass" class="checkbox-label">Tampilkan password</label>
                         </label>
 
+                    <!-- Role Field -->
+                    <div v-if="currentUser?.role === 'admin'">
+                    <label for="role" class="field-label">Role</label>
+                    <div class="input-group">
+                        <select v-model="role" name="role" class="form-control" required>
+                            <option disabled value="">Pilih role</option>
+                            <option value="admin">Admin</option>
+                            <option value="seller">Seller</option>
+                        </select>
+                    </div>
+                    </div>
                     <!-- Actions -->
                     <div class="actions">
                         <AppButton
-                            label="Login"
+                            label="Daftar"
                             :loading="loading"
                             :success="success"
                             style="--border-color: #030303; --bg-color: transparent; --color: #000; --border-hov: #333; --bg-hov: #cfecff"
                             type="buttonSubmit"
                         />
                         <AppButton
-                            label="Daftar"
+                            label="Login"
                             type="secondary"
-                            @click="goRegister"
+                            @click="gologin"
                             style="width: fit-content;"
                         />
                     </div>
@@ -74,7 +98,7 @@ import Spinner from "@/components/Spinner.vue";
 import AppButton from "@/components/AppButton.vue";
 
 export default {
-    name: "LoginView",
+    name: "registerView",
     components: {
         Spinner,
         AppButton,
@@ -82,7 +106,9 @@ export default {
     data() {
         return {
             username: "",
+            email: "",
             password: "",
+            role: "seller",
             loading: false,
             success: false,
             error: null,
@@ -94,54 +120,45 @@ export default {
         togglePassword() {
             this.showPassword = !this.showPassword;
         },
-        goRegister() {
-            this.$router.push("/register");
+        gologin() {
+            this.$router.push("/login");
         },
-        async handleLogin() {
-            if (this.username === "" || this.password === "") {
-                this.error = "Username dan password harus diisi.";
+        async handleRegister() {
+            // Validasi kolom wajib isi
+            if (!this.username || !this.email || !this.password || !this.role) {
+                this.error = "Semua kolom wajib diisi.";
                 toast.error(this.error);
-                this.loading = false;
                 return;
             }
 
-            this.loading = true;
             this.error = null;
+            this.success = false;
+            this.loading = true;
 
             try {
-                if (localStorage.getItem("token")) {
-                    toast.info("Sesi lama diakhiri, login ulang...");
-
-                    try {
-                        await api.post("/logout", {}, {
-                            headers: {
-                                Authorization: `Bearer ${localStorage.getItem("token")}`
-                            }
-                        });
-                    } catch (logoutErr) {
-                        console.warn("Gagal revoke token lama:", logoutErr);
-                        this.loading = false;
-                    }
-
-                    localStorage.removeItem("token");
-                }
-
-                const response = await api.post("/login", {
-                    login: this.username,
+                const response = await api.post("/register", {
+                    username: this.username,
+                    email: this.email,
                     password: this.password,
+                    role: this.role,
                 });
 
-                localStorage.setItem("token", response.data.token);
+                // Tampilkan sukses
+                toast.success(response.data.message || "Registrasi berhasil!");
+                this.success = true;
 
-                toast.success("Login berhasil!");
-                if (response.data.role === "admin") {
-                    this.$router.push("/admin");
-                } else if (response.data.role === "seller") {
-                    this.$router.push("/detail-kios?lokasi=" + response.data.lokasi);
-                }
+                // Reset form
+                this.username = "";
+                this.email = "";
+                this.password = "";
+                this.role = "";
 
+                // Arahkan ke halaman admin (mengikuti sistem admin/register.vue)
+                this.$router.push('/admin');
             } catch (err) {
-                this.error = err.response?.data?.message || "Login gagal. Silakan coba lagi.";
+                this.error = err.response?.data?.message || "Registrasi gagal. Silakan coba lagi.";
+                toast.error(this.error);
+            } finally {
                 this.loading = false;
             }
         },
@@ -164,7 +181,7 @@ export default {
   to { transform: translateY(0); opacity: 1; }
 }
 
-.login-body {
+.register-body {
     background-image: url("/bg-login.png");
     background-size: cover;
     background-position: center;
@@ -174,12 +191,20 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
+
+    &::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: rgba(131, 255, 129, 0.119);
+    }
 }
 
-.login-main {
+.register-main {
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 1;
 }
 
 .form-control {
@@ -189,7 +214,7 @@ export default {
     font-family: "Pixel Operator";
 }
 
-.login-card {
+.register-card {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -208,20 +233,20 @@ export default {
     animation: floatUp 420ms ease-out;
 }
 
-.login-card h2 {
+.register-card h2 {
     font-family: "Title";
     font-size: 34px;
     color: #15a1cb;
     -webkit-text-stroke: .8px rgba(0, 0, 0, 0.634);
 }
-.login-card p {
+.register-card p {
     font-family: "Minecraft";
     font-size: 10px;
     color: black;
 }
 
 /* Accent gradient strip */
-.login-card::before {
+.register-card::before {
     content: "";
     position: absolute;
     inset: 0;
@@ -232,7 +257,7 @@ export default {
 
 select { width: 100%; }
 
-.login-form form {
+.register-form form {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -243,7 +268,7 @@ select { width: 100%; }
 
 form div p { font-size: 24px; }
 
-.login-form input {
+.register-form input {
     background-color: #15a0cb00;
     border-radius: 5px;
     box-sizing: border-box;

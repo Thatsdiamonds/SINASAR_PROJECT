@@ -431,7 +431,6 @@ const updateKios = async () => {
 .left {
     flex: 0 0 auto;
     background: #fff;
-    border: 1px solid var(--container-border-color);
     padding: 1rem;
 }
 
@@ -443,7 +442,7 @@ const updateKios = async () => {
 }
 .left div h1 {
      all: unset;
-    font-family: 'Title', sans-serif;
+    font-family: 'Press Start 2P', sans-serif;
     font-style: normal;
     width: fit-content;
     font-size: 2.4rem;
@@ -543,7 +542,6 @@ img {
     height: 100%;
     object-fit: cover;
     background-color: #f0f0f0;
-    border: 1px solid #ddd;
 }
 
 .form-grid {

@@ -101,8 +101,8 @@ export default {
                 this.email = "";
                 this.password = "";
                 this.role = "";
-                // ke view login
-                this.$router.back();
+                // setelah sukses, admin diarahkan ke dashboard admin
+                this.$router.push('/admin');
             } catch (err) {
                 this.error = err.response?.data?.message || "Registrasi gagal. Silakan coba lagi.";
                 toast.error(this.error); // tampilkan toast error

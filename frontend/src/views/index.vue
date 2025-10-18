@@ -195,19 +195,6 @@
 </template>
 
 <style scoped>
-@font-face {
-  font-family: 'Press Start 2P';
-  src: url('@/fonts/PressStart2P-Regular.ttf') format('truetype');
-  font-weight: 400;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Minecraft Standard';
-  src: url('@/fonts/MinecraftStandard.otf') format('opentype');
-  font-weight: 400;
-  font-style: normal;
-}
 
 @font-face {
   font-family: 'Minecraft';
@@ -215,10 +202,15 @@
   font-weight: 400;
   font-style: normal;
 }
-
 @font-face {
   font-family: 'Pixel Operator';
   src: url('@/fonts/PixelOperator.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Minecraft Standard';
+  src: url('@/fonts/MinecraftStandard.otf') format('opentype');
   font-weight: 400;
   font-style: normal;
 }

@@ -23,7 +23,7 @@
           <a style="color: #fff;">Masuk ke akun Anda</a>
         </div>
       </div>
-
+      
       <!-- Seller: tombol Edit Kios jika pemilik kios -->
       <div 
         v-else-if="currentUser?.role === 'seller' && kiosData && Number(currentUser?.id) === Number(kiosData?.user_id)"
@@ -68,16 +68,11 @@
                     <div class="content-header marginbttm">
                         <div class="content-header-text">
                             <div class="content-sub">
-                                <span v-if="isLoading">Mengambil data...</span>
+                                <span v-if="isLoading"><h2 class="content-title">Mengambil data...</h2></span>
                                 <h2 class="content-title" v-else-if="kiosData && kiosData.lokasi">Informasi kios {{ kiosData.lokasi }}</h2>
-                                <span v-else>
-                                  <template v-if="isSellerNoLinkedKios">
-                                    Anda belum memiliki kios terkait. Hubungi pihak admin untuk membantu membuatkan.
-                                  </template>
-                                  <template v-else>
-                                    Tidak ada data kios
-                                  </template>
-                                </span>
+                                <h2 class="content-title" v-else>Tidak ada data kios dengan lokasi {{ route.params?.lokasi || route.query?.lokasi || '' }}</h2>
+                                <br>
+                                <p class="content-sub" v-if="isSellerNoLinkedKios">Anda belum memiliki kios terkait. Hubungi pihak admin untuk membantu membuatkan.</p>
                             </div>
                         </div>
                     </div>
@@ -203,10 +198,6 @@
       flex-direction: column;
       justify-content: space-between;
       height: 96dvh;
-    }
-    
-    :root {
-        --container-border-color: #00000020;
     }
     
     @font-face {
@@ -360,7 +351,6 @@
         grid-column: 1 / -1;
     }
     .config-field { grid-column: span 6; }
-    .config-field.full { grid-column: 1 / -1; }
     .config-field label {
         font-family: 'Pixel Operator', sans-serif;
         font-size: .95rem;
