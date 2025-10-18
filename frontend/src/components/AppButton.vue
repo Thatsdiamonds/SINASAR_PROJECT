@@ -32,8 +32,6 @@ import Spinner from './Spinner.vue'
 defineProps({
   label: { type: String, default: 'Simpan' },
   loading: { type: Boolean, default: false },
-  success: { type: Boolean, default: false },
-  error: { type: Boolean, default: false },
 
   type: {
     type: String,
@@ -64,8 +62,8 @@ defineProps({
 
 <style scoped>
 @font-face {
-  font-family: 'Minecraft Standard';
-  src: url('@/fonts/MinecraftStandard.otf') format('opentype');
+  font-family: 'Minecraft Medium';
+  src: url('@/fonts/minecraft.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
 }
@@ -75,7 +73,7 @@ defineProps({
   align-items: center;
   justify-content: center;
   gap: 8px;
-  font-family: "Minecraft Standard", sans-serif;
+  font-family: "Minecraft Medium", sans-serif;
   border: none;
   border-radius: 10px;
   padding: 10px 20px;
@@ -87,7 +85,7 @@ defineProps({
 }
 span {
   font-family: "Minecraft Medium";
-  transform: translateY(1px);
+  transform: translateY(+2px);
 }
 
 /* Variasi style */

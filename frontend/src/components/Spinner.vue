@@ -43,13 +43,6 @@ const spinnerSrc = spinner
 </script>
 
 <style scoped>
-@font-face {
-  font-family: 'Minecraft Standard';
-  src: url('@/fonts/MinecraftStandard.otf') format('opentype');
-  font-weight: 400;
-  font-style: normal;
-}
-
 .spinner-wrapper {
   display: inline-flex;
   align-items: center;
@@ -79,7 +72,7 @@ const spinnerSrc = spinner
 /* teks */
 .message_display {
   font-family: "Minecraft Medium";
-  transform: translateY(1px);
+  transform: translateY(+2px);
   font-size: 14px;
   font-weight: 500;
   letter-spacing: 0.5px;
