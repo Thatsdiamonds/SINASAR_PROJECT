@@ -482,7 +482,7 @@ export default {
     width: fit-content;
     font-size: 2.4rem;
     display: block;
-    color: #15A1C8;
+    color: #024196;
     text-shadow: 4px 4px 0px #1E3445;
     writing-mode: vertical-rl;
     text-orientation: upright;

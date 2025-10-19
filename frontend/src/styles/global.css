@@ -5,6 +5,23 @@
 
 :root {
   --container-border-color: #00000020;
+  --box-bg-color: #EEF2F6;
+}
+
+*::-webkit-scrollbar {
+  width: 12px;
+  background: white;
+}
+*::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #33C3F0 0%, #247CFF 100%);
+  border: 2px solid #F7FAFD; /* bikin efek ‘floating’ */
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #438FFF 0%, #1E6EF5 100%);
+}
+
+body {  
+  background-color: #F7FAFD;
 }
 
 @font-face {

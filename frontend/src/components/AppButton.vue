@@ -101,16 +101,24 @@ span {
 
 /* Variasi style */
 .app-btn.primary {
-  background: #15a1cb;
+  background: #024196;
   color: white;
 }
 .app-btn.buttonSubmit {
-  background: #15a1cb;
+  background: #247CFF;
   color: white;
+
+  &:hover {
+    background: #438fff;
+  }
 }
 .app-btn.buttonSubmit2 {
-  background: #00a846;
+  background: #33C3F0;
   color: white;
+
+  &:hover {
+    background: #5ccfff;
+  }
 }
 .app-btn.primary:hover {
   background: #187bcd;

@@ -216,7 +216,7 @@ function updateLabelStates() {
 function applyHoverState(rect) {
   rect.classList.add('hover-state');
   rect.style.filter = "brightness(1.1)";
-  rect.style.stroke = "#15A1C8";
+  rect.style.stroke = "#024196";
   rect.style.strokeWidth = "2";
 }
 

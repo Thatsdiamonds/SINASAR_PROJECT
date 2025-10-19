@@ -9,7 +9,16 @@
             <div style="display: inline-flex; gap: 1rem;">
               <div class="button" 
                    @click="toggle"
-                   style="--border-color: #19A7A7; --bg-color: transparent;">
+                   style="
+                    --border-color: #E3E8EF;
+                    --bg-color: transparent;
+                    --color: #024196;
+                    --sub-color: #0241969a;
+                    --border-hov: #247CFF;
+                    --bg-hov: #F8FAFD;
+                    "
+
+                    >
                 <img src="/icons/lampu_suar.svg" alt="Icon" width="auto" height="100%">
                   <div class="text">
                     <h3>Cari kios...</h3>
@@ -17,7 +26,16 @@
                   </div>
               </div>
 
-              <div v-if="!isAuthenticated" class="button" @click="router.push('/login')" style="--border-color: #0D9C9C; --bg-color: #19A7A7; --bg-hov: #49CCCC; --border-hov: #49CCCC; color: #fff;">
+              <div v-if="!isAuthenticated" class="button" @click="router.push('/login')"
+              style="
+                --border-color: #247CFF;
+                --bg-color: #247CFF;
+                --color: #fff;
+                --sub-color: #ffffffb0;
+                --border-hov: #438fff;
+                --bg-hov: #438fff;
+                "
+                >
                 <img src="/icons/heart.svg" alt="Icon" width="auto" height="100%">
                   <div class="text">
                     <h3>Login</h3>
@@ -26,7 +44,16 @@
               </div>
 
               <div v-else style="display: inline-flex; gap: 1rem;">
-                <div v-if="userRole == 'seller'" class="button" @click="router.push(`/seller/dashboard/detail-kios?lokasi=${userKiosLocation}`)" style="--border-color: #2ea7ff; --bg-color: #2ea7ff; --bg-hov: #1b96ff; --border-hov: #1b96ff; color: #fff;">
+                <div v-if="userRole == 'seller'" class="button" @click="router.push(`/seller/dashboard/detail-kios?lokasi=${userKiosLocation}`)"
+                style="
+                  --border-color: #247CFF;
+                  --bg-color: #247CFF;
+                  --color: #fff;
+                  --sub-color: #ffffffb0;
+                  --border-hov: #438fff;
+                  --bg-hov: #438fff;
+                  "
+                >
                   <img src="/icons/heart.svg" alt="Icon" width="auto" height="100%">
                     <div class="text">
                       <h3>Kelola</h3>
@@ -40,14 +67,14 @@
                       <h4>Panel konfigurasi Admin</h4>
                     </div>
                 </div>
-                <div class="button" @click="$router.push('/auth?auth-type=sign-out&auto-proceed=true');" style="--border-color: #ff5b5b; --bg-color: #ff5b5b; --bg-hov: #f54f4f; --border-hov: #f54f4f; color: #fff;">
-                  <img src="/icons/drought.svg" alt="Icon" width="auto" height="100%">
-                    <div class="text">
-                      <h3>Logout</h3>
-                      <h4>Keluar dari akun</h4>
-                    </div>
+                <div class="button" @click="$router.push('/auth?auth-type=sign-out&auto-proceed=true');"
+                  style="--border-color: #ff5b5b; --bg-color: #ff5b5b; --bg-hov: #f54f4f; --border-hov: #f54f4f; --color: #fff; --sub-color: #fff;">
+                    <img src="/icons/drought.svg" alt="Icon" width="auto" height="100%">
+                  <div class="text">
+                    <h3>Logout</h3>
+                    <h4>Keluar dari akun Anda</h4>
+                  </div>
                 </div>
-                
               </div>
           </div>
         </div>
@@ -336,7 +363,7 @@ nav {
   width: 45px;
   height: 45px;
   background: rgba(255, 255, 255, 0.9);
-  border: 2px solid #15a1c8;
+  border: 2px solid #247CFF;
   border-radius: 6px;
   pointer-events: auto;
   cursor: pointer;
@@ -344,7 +371,7 @@ nav {
 }
 
 .zoom-btn:hover {
-  background: #15a1c8;
+  background: #438fff;
   transform: translateY(-1px);
 }
 
@@ -387,7 +414,7 @@ nav .right .button {
   --bg-color: #fff;
   --color: #000;
   --sub-color: #3333339a;
-  --border-hov: #15A1C8;
+  --border-hov: #024196;
   --bg-hov: transparent;
   
   pointer-events: auto;
@@ -583,16 +610,16 @@ html {
   padding: 0.7rem;
   margin-top: 0.3rem;
   background: transparent;
-  border: 2px solid #15a1c8;
+  border: 2px solid #024196;
   font-family: 'Minecraft', sans-serif;
   font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.2s;
-  color: #15a1c8;
+  color: #024196;
 }
 
 .download-denah-btn:hover {
-  background: #15a1c8;
+  background: #024196;
   color: white;
   transform: translateY(-1px);
 }
@@ -659,7 +686,7 @@ html {
 }
 
 .Box.ing {
-  border-color: #15a1c8;
+  border-color: #024196;
   box-shadow: 0 0 0 2px rgba(21, 161, 200, 0.2);
 }
 
@@ -689,7 +716,7 @@ html {
 }
 
 .kios-item-aktif {
-  border-left: 6px solid #15a1c8;
+  border-left: 6px solid #024196;
 }
 
 .kios-img {
@@ -790,7 +817,7 @@ html {
 /* Efek highlight saat hover di item kios */
 .kios-item:hover {
   background-color: rgba(21, 161, 200, 0.1);
-  border-left-color: #15a1c8;
+  border-left-color: #024196;
 }
 
 /* Animasi fade-in untuk daftar hasil pencarian */
@@ -886,8 +913,8 @@ html {
   justify-content: center;
   gap: 0.5rem;
   padding: 0.8rem;
-  background: #15a1c8;
-  border: 2px solid #15a1c8;
+  background: #024196;
+  border: 2px solid #024196;
   color: white;
   font-family: 'Minecraft', sans-serif;
   font-size: 0.9rem;
@@ -1137,7 +1164,7 @@ async function fetchPenjualById(id) {
       return; // gunakan cache, tidak perlu hit API detail
     }
     
-    const res = await api.get(`/penjual/detail/${lokasi}`, { silent: true });
+    const res = await getUserRole.get(`/penjual/detail/${lokasi}`, { silent: true });
     
     // Cek apakah data ditemukan
     if (res.data.data && Object.keys(res.data.data).length > 0) {
@@ -1396,7 +1423,7 @@ async function downloadDenah() {
     ctx.fillText('Jl. Prabangsa No. 4 Pati', canvas.width / 2, 80);
     
     // garis pemisah
-    ctx.strokeStyle = '#15a1c8';
+    ctx.strokeStyle = '#024196';
     ctx.lineWidth = 3;
     ctx.beginPath();
     ctx.moveTo(50, 100);
@@ -1425,7 +1452,7 @@ async function downloadDenah() {
     }
     
     // Garis pemisah kedua
-    ctx.strokeStyle = '#15a1c8';
+    ctx.strokeStyle = '#024196';
     ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.moveTo(50, 360);
@@ -1435,7 +1462,7 @@ async function downloadDenah() {
     // Label denah
     ctx.font = 'bold 24px Minecraft, monospace';
     ctx.textAlign = 'center';
-    ctx.fillStyle = '#15a1c8';
+    ctx.fillStyle = '#024196';
     ctx.fillText('DENAH PASAR (Kios yang dipilih ditandai)', canvas.width / 2, 400);
     
     // Ambil SVG denah dan konversi ke gambar
@@ -1471,7 +1498,7 @@ async function downloadDenah() {
         ctx.drawImage(img, denahX, denahY, denahWidth, denahHeight);
         
         // Border untuk denah
-        ctx.strokeStyle = '#15a1c8';
+        ctx.strokeStyle = '#024196';
         ctx.lineWidth = 3;
         ctx.strokeRect(denahX, denahY, denahWidth, denahHeight);
         

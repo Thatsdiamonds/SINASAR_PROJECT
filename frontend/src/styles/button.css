@@ -4,7 +4,7 @@
   --bg-color: #fff;
   --color: #000;
   --sub-color: #3333339a;
-  --border-hov: #15A1C8;
+  --border-hov: #024196;
   --bg-hov: transparent;
 
   all: unset;
@@ -38,7 +38,7 @@
 .button:hover {
   background-color: var(--bg-hov);
   border-color: var(--border-hov);
-  box-shadow: 0 0 0 2px #fff, 6px 6px 0 0 #15A1C8;
+  box-shadow: 0 0 0 2px #fff, 6px 6px 0 0 #024196;
 }
 
 .button:active {

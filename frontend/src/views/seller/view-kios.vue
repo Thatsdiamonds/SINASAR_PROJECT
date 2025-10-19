@@ -55,7 +55,7 @@
   <div class="upper-container">
     <div class="left">
         <div>
-            <h1>Info Kios</h1>
+            <h1 style="color: #247CFF;">Info Kios</h1>
             <h2>Halaman untuk melihat detail informasi kios yang terpilih</h2>
         </div>
     </div>
@@ -165,6 +165,7 @@
       kiosData.value = res?.data?.data || res?.data || null;
     } finally {
       isLoading.value = false;
+      JsLoadingOverlay.hide();
     }
   }
 
@@ -331,7 +332,7 @@
         width: fit-content;
         font-size: 2.4rem;
         display: block;
-        color: #15A1C8;
+    color: #247CFF;
         text-shadow: 4px 4px 0px #1E3445;
         writing-mode: vertical-rl;
         text-orientation: upright;

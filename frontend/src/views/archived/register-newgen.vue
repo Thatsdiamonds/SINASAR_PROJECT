@@ -236,7 +236,7 @@ export default {
 .register-card h2 {
     font-family: "Title";
     font-size: 34px;
-    color: #15a1cb;
+    color: #024196;
     -webkit-text-stroke: .8px rgba(0, 0, 0, 0.634);
 }
 .register-card p {

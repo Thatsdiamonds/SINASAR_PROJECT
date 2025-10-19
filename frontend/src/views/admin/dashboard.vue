@@ -762,7 +762,8 @@ const removeFotoKiosDraft = () => {
   <div class="body-wrapper">
   <!-- Tombol Aksi - Header -->
   <div class="upperButtonMenu marginbttm">
-    <div class="button" @click="$router.push('/logout');">
+    <div class="button" @click="$router.push('/logout');"
+      style="--border-color: #ff5b5b; --bg-color: #ff5b5b; --bg-hov: #f54f4f; --border-hov: #f54f4f; --color: #fff; --sub-color: #fff;">
         <img src="/icons/drought.svg" alt="Icon" width="auto" height="100%">
       <div class="text">
         <a>Logout</a>
@@ -771,19 +772,40 @@ const removeFotoKiosDraft = () => {
     </div>
 
     <div style="display: inline-flex; gap: 1rem;">
-      <div class="button" style="--border-color: #0D9C9C" @click="$router.push('/admin/register');">
+      <div class="button"
+        style="
+          --border-color: #E3E8EF;
+          --bg-color: transparent;
+          --color: #024196;
+          --sub-color: #0241969a;
+          --border-hov: #247CFF;
+          --bg-hov: #F8FAFD;
+          "
+          @click="$router.push('/')"
+          >
+          <img src="/icons/sunglasses.svg" alt="Icon" width="auto" height="100%">
+        <div class="text">
+          <a>Denah</a>
+          <a>Lihat denah pasar Owi</a>
+        </div>
+      </div>
+      
+      <div class="button"
+              style="
+              --border-color: #247CFF;
+              --bg-color: #247CFF;
+              --color: #fff;
+              --sub-color: #ffffffb0;
+              --border-hov: #438FFF;
+              --bg-hov: #438FFF;
+              --shadow: 0 4px 12px rgba(36,124,255,0.25);
+              --shadow-hov: 0 6px 18px rgba(67,143,255,0.35);"
+              @click="$router.push('/admin/register')"
+          >
           <img src="/icons/rocket.svg" alt="Icon" width="auto" height="100%">
         <div class="text">
           <a>Halaman Add Seller</a>
           <a>Klik di sini untuk berpindah</a>
-        </div>
-      </div>
-
-      <div class="button" style="--border-color: #0D9C9C" @click="$router.push('/');">
-          <img src="/icons/sunglasses.svg" alt="Icon" width="auto" height="100%">
-        <div class="text">
-          <a>Denah</a>
-          <a>Lihat denah pasar owi</a>
         </div>
       </div>
     </div>
@@ -797,14 +819,6 @@ const removeFotoKiosDraft = () => {
     </div>
 
     <div style="display: inline-flex; gap: 1rem;">
-      <div class="button" 
-           style="--border-color: #15a1c8; --bg-color: #15a1c8; --color: #fff; --bg-hov: #16abd5"
-           @click="resetAllPanels">
-        <img src="/icons/save.svg" alt="Icon" width="auto" height="100%">
-        <div class="text">
-          <a>RESET SEMUA PANEL</a>
-        </div>
-      </div>
 
       <div class="button" 
            style="--border-color: #e57373; --bg-color: transparent; --color: #e57373; --border-hov: #d32f2f; --bg-hov: #ffebee"
@@ -826,8 +840,17 @@ const removeFotoKiosDraft = () => {
           <h2 class="content-title">Editor Denah Pasar</h2>
           <div class="content-sub">Total sebanyak 16 kios</div>
         </div>
-        <div class="button" style="--border-color: #19a7a7; --bg-color: #19a7a7; --color: #fff; --sub-color: #ffffff9a; --bg-hov: #16abd5" @click="openUploadDenah">
-          <img src="/icons/cloud.svg" alt="Icon" width="auto" height="100%">
+        <div class="button" @click="openUploadDenah"
+          style="
+          --border-color: #247CFF;
+          --bg-color: #247CFF;
+          --color: #fff;
+          --sub-color: #ffffffb0;
+          --border-hov: #438FFF;
+          --bg-hov: #438FFF;
+          --shadow: 0 4px 12px rgba(36,124,255,0.25);
+          --shadow-hov: 0 6px 18px rgba(67,143,255,0.35);"
+        >
           <div class="text">
             <a>Upload Denah</a>
           </div>
@@ -936,7 +959,14 @@ const removeFotoKiosDraft = () => {
         </div>
         <div style="display: flex; gap: 1rem;">
           <div class="button" 
-               style="--border-color: #030303; --bg-color: transparent; --color: #000; --border-hov: #e57373; --bg-hov: #f8d7da"
+            style="
+              --border-color: #E3E8EF;
+              --bg-color: transparent;
+              --color: #024196;
+              --sub-color: #0241969a;
+              --border-hov: #247CFF;
+              --bg-hov: #F8FAFD;
+              "
                @click="handleResetKiosConfig">
             <img src="/icons/change_file.svg" alt="Icon" width="auto" height="100%">
             <div class="text">
@@ -944,7 +974,15 @@ const removeFotoKiosDraft = () => {
             </div>
           </div>
           <div class="button" 
-               style="--border-color: #16abd5; --bg-color: #19a7a7; --color: #fff; --border-hov: #16abd5; --bg-hov: #16abd5"
+              style="
+              --border-color: #247CFF;
+              --bg-color: #247CFF;
+              --color: #fff;
+              --sub-color: #ffffffb0;
+              --border-hov: #438FFF;
+              --bg-hov: #438FFF;
+              --shadow: 0 4px 12px rgba(36,124,255,0.25);
+              --shadow-hov: 0 6px 18px rgba(67,143,255,0.35);"
                @click="handleSaveKiosConfig();">
             <img src="/icons/save_pixel.svg" alt="Icon" width="auto" height="100%">
             <div class="text">
@@ -1065,7 +1103,14 @@ const removeFotoKiosDraft = () => {
       </div>
         <div style="display: flex; gap: 1rem;">
           <div class="button" 
-               style="--border-color: #030303; --bg-color: transparent; --color: #000; --border-hov: #e57373; --bg-hov: #f8d7da"
+              style="
+                --border-color: #E3E8EF;
+                --bg-color: transparent;
+                --color: #024196;
+                --sub-color: #0241969a;
+                --border-hov: #247CFF;
+                --bg-hov: #F8FAFD;
+                "
                @click="handleResetUserConfig">
             <img src="/icons/close.svg" alt="Icon" width="auto" height="100%">
             <div class="text">
@@ -1073,7 +1118,15 @@ const removeFotoKiosDraft = () => {
             </div>
           </div>
           <div class="button" 
-               style="--border-color: #16abd5; --bg-color: #19a7a7; --color: #fff; --border-hov: #16abd5; --bg-hov: #16abd5"
+              style="
+              --border-color: #247CFF;
+              --bg-color: #247CFF;
+              --color: #fff;
+              --sub-color: #ffffffb0;
+              --border-hov: #438FFF;
+              --bg-hov: #438FFF;
+              --shadow: 0 4px 12px rgba(36,124,255,0.25);
+              --shadow-hov: 0 6px 18px rgba(67,143,255,0.35);"
                @click="handleSaveUserConfig">
             <img src="/icons/save_pixel.svg" alt="Icon" width="auto" height="100%">
             <div class="text">
@@ -1373,7 +1426,7 @@ const removeFotoKiosDraft = () => {
     font-size: 3rem;
     display: flex;
     align-items: flex-end;
-    color: #15A1C8;
+    color: #247CFF;
     text-shadow: 4px 4px 0px #1E3445;
   }
   .subheading {
@@ -1395,7 +1448,7 @@ const removeFotoKiosDraft = () => {
   box-sizing: border-box;
   padding: 1.5rem;
   border: 2px solid var(--container-border-color);
-  background: #fff;
+  background: var(--box-bg-color);
 }
 .content-header {
   display: flex;
@@ -1415,6 +1468,13 @@ const removeFotoKiosDraft = () => {
   all: unset;
   font-family: 'Pixel Operator', sans-serif;
   font-size: 1.2rem;
+
+  a {
+    color: #247CFF;
+    &:hover {
+      color: #1a5fd0;
+    }
+  }
 }
 .denah-area {
   width: 100%;
@@ -1488,7 +1548,7 @@ const removeFotoKiosDraft = () => {
 }
 
 .kios-item-aktif {
-  border-left: 6px solid #15a1c8;
+  border-left: 6px solid #024196;
   background: #d1f3ff;
 }
 
@@ -1669,15 +1729,6 @@ const removeFotoKiosDraft = () => {
   overflow: auto;
 }
 
-/* Optional: Hide scrollbars for a cleaner look */
-.equal-height-item::-webkit-scrollbar {
-  width: 8px;
-  background: #f0f0f0;
-}
-.equal-height-item::-webkit-scrollbar-thumb {
-  background: #d1f3ff;
-}
-
 /* Styling untuk form konfigurasi pengguna */
 .password-input-container {
   position: relative;
@@ -1818,7 +1869,7 @@ const removeFotoKiosDraft = () => {
 
 /* Styling untuk kios yang dipilih */
 .kios-item-aktif {
-  border-left: 6px solid #15a1c8 !important;
+  border-left: 6px solid #024196 !important;
   background-color: rgba(21, 161, 200, 0.1);
   box-shadow: 0 2px 8px rgba(21, 161, 200, 0.2);
 }
@@ -1855,7 +1906,7 @@ const removeFotoKiosDraft = () => {
   width: 36px;
   height: 36px;
   background: rgba(255, 255, 255, 0.9);
-  border: 2px solid #15a1c8;
+  border: 2px solid #247CFF;
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -1863,7 +1914,7 @@ const removeFotoKiosDraft = () => {
 }
 
 .zoom-btn:hover {
-  background: #15a1c8;
+  background: #438fff;
   transform: translateY(-1px);
 }
 
@@ -1943,7 +1994,7 @@ const removeFotoKiosDraft = () => {
 }
 
 .upload-area {
-  border: 2px dashed #15a1c8;
+  border: 2px dashed #024196;
   border-radius: 8px;
   padding: 2rem;
   text-align: center;
@@ -2043,8 +2094,8 @@ const removeFotoKiosDraft = () => {
 }
 
 .modal-btn.primary {
-  background: #15a1c8;
-  border-color: #15a1c8;
+  background: #024196;
+  border-color: #024196;
   color: white;
 }
 
