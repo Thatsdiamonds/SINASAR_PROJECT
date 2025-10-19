@@ -135,9 +135,9 @@ export default {
 
                 toast.success("Login berhasil!");
                 if (response.data.role === "admin") {
-                    this.$router.push("/admin");
+                    this.$router.push("/admin/dashboard");
                 } else if (response.data.role === "seller") {
-                    this.$router.push("/detail-kios?lokasi=" + response.data.lokasi);
+                    this.$router.push("/seller/dashboard/detail-kios?lokasi=" + response.data.lokasi);
                 }
 
             } catch (err) {

@@ -20,6 +20,7 @@
                     name="login-username"
                     class="form-control"
                     placeholder="Masukkan username/email"
+                    ref="loginUsernameInput"
                     required
                   />
                 </div>
@@ -34,6 +35,7 @@
                     class="form-control"
                     placeholder="Masukkan password"
                     required
+                    ref="loginPasswordInput"
                   />
                 </div>
 
@@ -59,7 +61,7 @@
           </div>
 
           <!-- Register Content inside single card -->
-          <div v-else key="sign-up">
+          <div v-else-if="isSignUp" key="sign-up">
             <div class="card-title">
               <h2 :style="{ color: '#00a846' }">Register</h2>
               <p v-if="this.$route.path === '/admin/register' || (currentUser && currentUser.role === 'admin')">Buat akun baru jalur dalam 😋😋</p>
@@ -75,6 +77,7 @@
                   name="reg-username"
                   class="form-control"
                   placeholder="Masukkan username"
+                  ref="registerUsernameInput"
                   required
                 />
               </div>
@@ -88,6 +91,7 @@
                   name="reg-email"
                   class="form-control"
                   placeholder="Masukkan email"
+                  ref="registerEmailInput"
                   required
                 />
               </div>
@@ -101,6 +105,7 @@
                   name="reg-password"
                   class="form-control"
                   placeholder="Masukkan password"
+                  ref="registerPasswordInput"
                   required
                 />
               </div>
@@ -136,6 +141,37 @@
               </div>
             </form>
           </div>
+
+          <!-- Sign-out Content inside single card - State A: Konfirmasi -->
+          <div v-else-if="isSignOut && !isSignOutProceed" key="sign-out-confirm">
+            <div class="card-title">
+              <h2 :style="{ color: '#d9534f' }">Sign Out</h2>
+              <p>Apakah Anda benar-benar ingin keluar?</p>
+            </div>
+            <div class="actions bottom">
+              <AppButton
+                label="Ya, keluar"
+                @click="proceedSignOut"
+                type="buttonSubmit"
+              />
+            </div>
+          </div>
+
+          <!-- Sign-out Content inside single card - State B: Proses -->
+          <div v-else-if="isSignOutProceed" key="sign-out-process">
+            <div class="card-title">
+              <h2 :style="{ color: '#d9534f' }">Sign Out</h2>
+              <p>Tunggu sebentar...</p>
+            </div>
+            <div class="actions bottom">
+              <AppButton
+                label="Memproses..."
+                :loading="true"
+                :disabled="true"
+                type="buttonSubmit"
+              />
+            </div>
+          </div>
         </transition>
       </div>
     </main>
@@ -145,17 +181,16 @@
 <script>
 import api from "@/services/api";
 import toast from "@/services/toast";
+import { ref } from "vue";
 import Spinner from "@/components/Spinner.vue";
 import AppButton from "@/components/AppButton.vue";
 import { getUserProfile } from "@/services/api";
 import { useRoute } from 'vue-router';
 
 export default {
-  name: "AuthNextGen",
   components: { Spinner, AppButton },
   setup() {
     const route = useRoute()
-    
     return { route }
   },
   data() {
@@ -180,12 +215,28 @@ export default {
       },
       currentUser: null,
       isAnimating: false,
+      signOutActionStarted: false,
     };
   },
   computed: {
     isSignIn() {
       const t = (this.$route.query["auth-type"] || "sign-in").toString();
       return t === "sign-in";
+    },
+    isSignUp() {
+      const t = (this.$route.query["auth-type"] || "sign-in").toString();
+      return t === "sign-up";
+    },
+    isSignOut() {
+      const t = (this.$route.query["auth-type"] || "sign-in").toString();
+      return t === "sign-out" || t === "sign-out-proceed";
+    },
+    isSignOutProceed() {
+      const t = (this.$route.query["auth-type"] || "sign-in").toString();
+      return t === "sign-out-proceed";
+    },
+    isAutoProceed() {
+      return this.$route.query["auto-proceed"] === "true";
     },
   },
   methods: {
@@ -216,7 +267,9 @@ export default {
     async handleLogin() {
       if (this.login.username === "" || this.login.password === "") {
         this.login.error = "Username dan password harus diisi.";
-        toast.error(this.login.error);
+        if (toast) {
+          toast.error(this.login.error);
+        }
         this.login.loading = false;
         return;
       }
@@ -249,9 +302,9 @@ export default {
 
         toast.success("Login berhasil!");
         if (response.data.role === "admin") {
-          this.$router.push("/admin");
+          this.$router.push("/admin/dashboard");
         } else if (response.data.role === "seller") {
-          this.$router.push("/detail-kios?lokasi=" + response.data.lokasi);
+          this.$router.push("/seller/dashboard/detail-kios?lokasi=" + response.data.lokasi);
         }
       } catch (err) {
         this.login.error = err.response?.data?.message || "Login gagal. Silakan coba lagi.";
@@ -262,7 +315,6 @@ export default {
     async handleRegister() {
       if (!this.register.username || !this.register.email || !this.register.password) {
         this.register.error = "Semua kolom wajib diisi.";
-        toast.error(this.register.error);
         return;
       }
 
@@ -292,30 +344,91 @@ export default {
         this.register.success = true;
 
         // Reset form
+        const registeredEmail = this.register.email;
         this.register.username = "";
         this.register.email = "";
         this.register.password = "";
         this.register.role = "";
+        this.register.success = false;
 
         // Redirect setelah delay singkat
         setTimeout(() => {
-          this.$router.go(-1);
-        }, 800);
+          // this.$router.go(-1);
+          this.goAuthType('sign-in');
+          this.login.username = registeredEmail;
+        }, 400);
         
       } catch (err) {
         this.register.error = err.response?.data?.message || "Registrasi gagal. Silakan coba lagi.";
-        toast.error(this.register.error);
       } finally {
         this.register.loading = false;
       }
     },
+    proceedSignOut() {
+       // Redirect ke state B tanpa menambahkan ke history
+       this.$router.replace('/auth?auth-type=sign-out-proceed');
+     },
+
+     handleAuthStateActions() {
+       // Jalankan alur berdasarkan state di URL
+       // State B: sign-out-proceed
+       if (this.isSignOutProceed && !this.signOutActionStarted) {
+         this.signOutActionStarted = true;
+         setTimeout(() => {
+           this.handleSignOut();
+         }, 800);
+       }
+
+       // State C: auto-proceed dari State A
+       if (this.isSignOut && this.isAutoProceed && !this.isSignOutProceed && !this.signOutActionStarted) {
+         setTimeout(() => {
+           // Cegah double-trigger jika user klik manual
+           if (!this.signOutActionStarted) {
+             this.proceedSignOut();
+           }
+         }, 1000);
+       }
+     },
+     
+     async handleSignOut() {
+       try {
+         if (localStorage.getItem("token")) {
+           await api.post("/logout", {}, {
+             headers: {
+               Authorization: `Bearer ${localStorage.getItem("token")}`
+             }
+           });
+         }
+       } catch (error) {
+         console.warn("Gagal revoke token:", error);
+       } finally {
+         // Hapus localStorage
+         localStorage.removeItem('token');
+         // Tampilkan toast
+         toast.info('Anda telah logout.');
+         // Redirect ke login
+         this.$router.push('/login');
+       }
+     },
   },
   mounted() {
-    if (!this.$route.query['auth-type']) {
+    const authType = this.$route.query['auth-type'];
+    if (!authType || (!this.isSignIn && !this.isSignUp && !this.isSignOut)) {
       this.goAuthType('sign-in');
     }
     this.fetchCurrentUser();
+    // Jalankan handler agar state proses bekerja tanpa perlu refresh
+    this.handleAuthStateActions();
+  },
+  watch: {
+  '$route': {
+    handler() {
+      this.handleAuthStateActions();
+      this.signOutActionStarted = false;
+    },
+    immediate: true
   }
+}
 };
 </script>
 

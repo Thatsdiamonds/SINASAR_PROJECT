@@ -284,6 +284,7 @@ onMounted(async () => {
     console.error("Error loading shop profile:", err);
   } finally {
     loading.value = false;
+    JsLoadingOverlay.hide();
   }
 });
 
@@ -399,6 +400,40 @@ const updateKios = async () => {
     loading.value = false;
   }
 };
+</script>
+
+<script>
+import 'js-loading-overlay'
+export default {
+  mounted() {
+    // Auto scroll & highlight jika hash #konfig-kios
+    if (typeof window !== 'undefined' && window.location.hash === '#konfigurasi-kios') {
+      const el = document.getElementById('konfigurasi-kios');
+      if (el) {
+        // Smooth scroll ke panel
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // Tambahkan kelas highlight sementara
+        el.classList.add('hash-highlight');
+        setTimeout(() => el.classList.remove('hash-highlight'), 1500);
+      }
+    }
+    // Munculin overlay pas web mulai load
+    JsLoadingOverlay.show({
+      "overlayBackgroundColor": "#000000",
+      "overlayOpacity": 0.6,
+      "spinnerIcon": "ball-8bits",
+      "spinnerColor": "#188AEB",
+      "spinnerSize": "2x",
+      "overlayIDName": "overlay",
+      "spinnerIDName": "spinner",
+      "offsetX": 0,
+      "offsetY": 0,
+      "lockScroll": true,
+      "overlayZIndex": 9998,
+      "spinnerZIndex": 9999
+    });
+  }
+}
 </script>
 
 <style scoped>

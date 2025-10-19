@@ -12,6 +12,11 @@ const router = createRouter({
       component: () => import('@/views/index.vue')
     },
     {
+      path: '/seller/dashboard/detail-kios',
+      name: 'Kios Desc seller',
+      component: () => import('@/views/seller/view-kios.vue'),
+    },
+    {
       path: '/detail-kios',
       name: 'Kios Desc',
       component: () => import('@/views/seller/view-kios.vue'),
@@ -26,21 +31,8 @@ const router = createRouter({
     {
       path: '/logout',
       name: 'Logout',
-      beforeEnter: async (to, from, next) => {
-        try {
-          await api.post("/logout", {}, {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`
-            }
-          })
-        } catch (error) {
-          console.warn("Gagal revoke token:", error);
-        }
-
-        localStorage.removeItem('token')
-
-        toast.info('Anda telah logout.')
-        next('/login')
+      redirect: to => {
+        return { path: '/auth', query: { 'auth-type': 'sign-out' } }
       }
     },
     {
@@ -72,19 +64,19 @@ const router = createRouter({
       component: () => import('@/views/auth-nextgen.vue'),
     },
     {
-      path: '/admin',
+      path: '/admin/dashboard',
       name: 'AdminDenah',
       component: () => import('@/views/admin/dashboard.vue'),
       meta: { role: 'admin' }
     },
     {
-      path: '/seller',
+      path: '/seller/dashboard',
       name: 'SellerDashboard',
       component: () => import('@/views/seller/dashboard.vue'),
       meta: { roles: ['seller', 'admin'] }
     },
     {
-      path: "/my-kios/update",
+      path: "/seller/dashboard/my-kios/update",
       name: "UpdateKios",
       component: () => import('@/views/seller/update-kios.vue'),
       meta: { roles: ['seller'] }
@@ -102,7 +94,7 @@ router.beforeEach(async (to, from, next) => {
     return next()
   }
 
-  if (to.path === '/' || to.name === 'Kios Desc' || to.path === '/auth' || to.path.startsWith('/detail-kios')) {
+  if (to.path === '/' || to.name === 'Kios Desc' || to.path === '/auth' || to.path.startsWith('/seller/dashboard/detail-kios')) {
     return next()
   }
 

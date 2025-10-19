@@ -17,12 +17,37 @@
                   </div>
               </div>
 
-              <div class="button" @click="router.push('/login')" style="--border-color: #0D9C9C; --bg-color: #19A7A7; --bg-hov: #49CCCC; --border-hov: #49CCCC; color: #fff;">
+              <div v-if="!isAuthenticated" class="button" @click="router.push('/login')" style="--border-color: #0D9C9C; --bg-color: #19A7A7; --bg-hov: #49CCCC; --border-hov: #49CCCC; color: #fff;">
                 <img src="/icons/heart.svg" alt="Icon" width="auto" height="100%">
                   <div class="text">
                     <h3>Login</h3>
                     <h4>Masuk ke akun Anda</h4>
                   </div>
+              </div>
+
+              <div v-else style="display: inline-flex; gap: 1rem;">
+                <div v-if="userRole == 'seller'" class="button" @click="router.push(`/seller/dashboard/detail-kios?lokasi=${userKiosLocation}`)" style="--border-color: #2ea7ff; --bg-color: #2ea7ff; --bg-hov: #1b96ff; --border-hov: #1b96ff; color: #fff;">
+                  <img src="/icons/heart.svg" alt="Icon" width="auto" height="100%">
+                    <div class="text">
+                      <h3>Kelola</h3>
+                      <h4>Konfigurasi kios saya</h4>
+                    </div>
+                </div>
+                <div v-if="userRole == 'admin'" class="button" @click="router.push('/admin/dashboard')" style="--border-color: #2ea7ff; --bg-color: #2ea7ff; --bg-hov: #1b96ff; --border-hov: #1b96ff; color: #fff;">
+                  <img src="/icons/heart.svg" alt="Icon" width="auto" height="100%">
+                    <div class="text">
+                      <h3>Kelola</h3>
+                      <h4>Panel konfigurasi Admin</h4>
+                    </div>
+                </div>
+                <div class="button" @click="$router.push('/auth?auth-type=sign-out&auto-proceed=true');" style="--border-color: #ff5b5b; --bg-color: #ff5b5b; --bg-hov: #f54f4f; --border-hov: #f54f4f; color: #fff;">
+                  <img src="/icons/drought.svg" alt="Icon" width="auto" height="100%">
+                    <div class="text">
+                      <h3>Logout</h3>
+                      <h4>Keluar dari akun</h4>
+                    </div>
+                </div>
+                
               </div>
           </div>
         </div>
@@ -195,7 +220,6 @@
 </template>
 
 <style scoped>
-
 @font-face {
   font-family: 'Minecraft';
   src: url('@/fonts/minecraft.ttf') format('truetype');
@@ -253,7 +277,7 @@
   z-index: 2;
   position: absolute;
   top: 2rem;
-  width: 99%;
+  width: 100dvw;
   display: flex;
   justify-content: center;
   transform: translateY(0) scale(1);
@@ -885,9 +909,36 @@ import { ref, onMounted, onUnmounted, computed, watch } from "vue";
 import toast from "@/services/toast";
 import PasarOwi from "./admin/PasarOwi.vue";
 import api from "@/services/api";
+import { getUserRole } from "@/services/api";
 import { getAllSellerProfile } from "@/services/api";
 import { useRouter } from "vue-router";
 import { toPublicUrl } from "@/services/image";
+import 'js-loading-overlay'
+
+const isAuthenticated = computed(() => !!localStorage.getItem('token'));
+const userKiosLocation = ref(null); // Placeholder for user's kiosk location
+const userRole = ref(null);
+
+const fetchUserKiosLocation = async () => {
+  try {
+    if (userRole.value == "admin") return;
+    else if (userRole.value == "seller") {
+      const response = await api.get('/my-kios');
+      userKiosLocation.value = response.data.lokasi;
+    }
+  } catch (error) {
+    toast.error("Gagal mengambil informasi pengguna.");
+  }
+};
+
+onMounted(() => {
+  if (isAuthenticated.value) {
+    getUserRole().then(role => {
+      userRole.value = role;
+    });
+    fetchUserKiosLocation();
+  }
+});
 
 const sudahHintWkwkwk = ref(false);
 const lastFetched = ref(null);
@@ -1049,6 +1100,7 @@ async function fetchAllPenjual() {
     console.error("Error mengambil data kios:", err);
     toast.error("Gagal mengambil data kios");
   } finally {
+    JsLoadingOverlay.hide();
     isLoading.value = false;
   }
 }
@@ -1290,6 +1342,22 @@ onMounted(() => {
   
   // Aktifkan pembaruan data otomatis
   startAutoRefresh();
+
+  // Munculin overlay pas web mulai load
+  JsLoadingOverlay.show({
+    "overlayBackgroundColor": "#000000",
+    "overlayOpacity": 0.6,
+    "spinnerIcon": "ball-8bits",
+    "spinnerColor": "#188AEB",
+    "spinnerSize": "2x",
+    "overlayIDName": "overlay",
+    "spinnerIDName": "spinner",
+    "offsetX": 0,
+    "offsetY": 0,
+    "lockScroll": true,
+    "overlayZIndex": 9998,
+    "spinnerZIndex": 9999
+  });
 });
 
 onUnmounted(() => {

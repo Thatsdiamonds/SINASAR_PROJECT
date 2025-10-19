@@ -154,7 +154,7 @@ export default {
                 this.role = "";
 
                 // Arahkan ke halaman admin (mengikuti sistem admin/register.vue)
-                this.$router.push('/admin');
+                this.$router.push('/admin/dashboard');
             } catch (err) {
                 this.error = err.response?.data?.message || "Registrasi gagal. Silakan coba lagi.";
                 toast.error(this.error);

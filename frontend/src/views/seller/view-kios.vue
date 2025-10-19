@@ -29,7 +29,7 @@
         v-else-if="currentUser?.role === 'seller' && kiosData && Number(currentUser?.id) === Number(kiosData?.user_id)"
         class="button"
         style="--border-color: #0D9C9C"
-        @click="$router.push('/my-kios/update')">
+        @click="$router.push('/seller/dashboard/my-kios/update')">
         <img src="/icons/sunglasses.svg" alt="Icon" width="auto" height="100%">
         <div class="text">
           <a>Edit Kios</a>
@@ -42,7 +42,7 @@
         v-else-if="currentUser?.role === 'admin' && kiosData?.lokasi"
         class="button"
         style="--border-color: #0D9C9C"
-        @click="$router.push(`/admin?linked=${encodeURIComponent(kiosData.lokasi)}#konfigurasi-kios`)">
+        @click="$router.push(`/admin/dashboard?linked=${encodeURIComponent(kiosData.lokasi)}#konfigurasi-kios`)">
         <img src="/icons/rocket.svg" alt="Icon" width="auto" height="100%">
         <div class="text">
           <a>Buka Dashboard</a>
@@ -59,7 +59,7 @@
             <h2>Halaman untuk melihat detail informasi kios yang terpilih</h2>
         </div>
     </div>
-    <div class="right" :style="{ backgroundImage: (fotoKiosSrc ? `url('${fotoKiosSrc}')` : `url('/whitevan.jpeg')`) }">
+    <div class="right" :style="{ backgroundImage: (fotoKiosSrc ? `url('${fotoKiosSrc}')` : `url('/bg-login.png')`) }">
         <div class="kios-overlay">
             <div class="overlay-row">
                 <div class="fotoPengguna" v-if="kiosData && kiosData.lokasi" :style="{ backgroundImage: (fotoProfilSrc ? `url('${fotoProfilSrc}')` : `url('/icons/profile.svg')`)}"></div>
@@ -186,9 +186,45 @@
       fetchKiosDetail(),
       fetchCurrentUser()
     ]);
+    JsLoadingOverlay.hide();
   });
   </script>
   
+  <script>
+    import 'js-loading-overlay'
+    export default {
+      mounted() {
+        // Auto scroll & highlight jika hash #konfig-kios
+        if (typeof window !== 'undefined' && window.location.hash === '#konfigurasi-kios') {
+          const el = document.getElementById('konfigurasi-kios');
+          if (el) {
+            // Smooth scroll ke panel
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            // Tambahkan kelas highlight sementara
+            el.classList.add('hash-highlight');
+            setTimeout(() => el.classList.remove('hash-highlight'), 1500);
+          }
+        }
+        // Munculin overlay pas web mulai load
+        JsLoadingOverlay.show({
+          "overlayBackgroundColor": "#000000",
+          "overlayOpacity": 0.6,
+          "spinnerIcon": "ball-8bits",
+          "spinnerColor": "#188AEB",
+          "spinnerSize": "2x",
+          "overlayIDName": "overlay",
+          "spinnerIDName": "spinner",
+          "offsetX": 0,
+          "offsetY": 0,
+          "lockScroll": true,
+          "overlayZIndex": 9998,
+          "spinnerZIndex": 9999
+        });
+      }
+    }
+  </script>
+
+
   <style scoped>
   
   @import '@/styles/button.css';

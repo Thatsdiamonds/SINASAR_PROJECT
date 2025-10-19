@@ -3,7 +3,6 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 
-
 import 'vue-toast-notification/dist/theme-bootstrap.css'
 import '@/styles/global.css'
 import '@/styles/button.css'

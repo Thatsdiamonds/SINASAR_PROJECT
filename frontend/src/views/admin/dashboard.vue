@@ -499,7 +499,8 @@ async function fetchAllPenjual() {
   } catch (err) {
     console.error("Error mengambil data penjual:", err);
     toast.error("Gagal mengambil data penjual");
-  } finally {
+  } finally {    
+    JsLoadingOverlay.hide();
     isLoading.value = false;
   }
 }
@@ -778,11 +779,11 @@ const removeFotoKiosDraft = () => {
         </div>
       </div>
 
-      <div class="button" style="--border-color: #0D9C9C">
+      <div class="button" style="--border-color: #0D9C9C" @click="$router.push('/');">
           <img src="/icons/sunglasses.svg" alt="Icon" width="auto" height="100%">
         <div class="text">
-          <a>Kelola</a>
-          <a>Klik di sini untuk berpindah</a>
+          <a>Denah</a>
+          <a>Lihat denah pasar owi</a>
         </div>
       </div>
     </div>
@@ -2130,6 +2131,7 @@ const removeFotoKiosDraft = () => {
 </style>
 
 <script>
+import 'js-loading-overlay'
 export default {
   mounted() {
     // Auto scroll & highlight jika hash #konfig-kios
@@ -2143,6 +2145,21 @@ export default {
         setTimeout(() => el.classList.remove('hash-highlight'), 1500);
       }
     }
+    // Munculin overlay pas web mulai load
+    JsLoadingOverlay.show({
+      "overlayBackgroundColor": "#000000",
+      "overlayOpacity": 0.6,
+      "spinnerIcon": "ball-8bits",
+      "spinnerColor": "#188AEB",
+      "spinnerSize": "2x",
+      "overlayIDName": "overlay",
+      "spinnerIDName": "spinner",
+      "offsetX": 0,
+      "offsetY": 0,
+      "lockScroll": true,
+      "overlayZIndex": 9998,
+      "spinnerZIndex": 9999
+    });
   }
 }
 </script>
