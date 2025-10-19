@@ -62,7 +62,8 @@
           <div v-else key="sign-up">
             <div class="card-title">
               <h2 :style="{ color: '#00a846' }">Register</h2>
-              <p>Buat akun baru untuk menjadi bagian dari kami.</p>
+              <p v-if="this.$route.path === '/admin/register' || (currentUser && currentUser.role === 'admin')">Buat akun baru jalur dalam 😋😋</p>
+              <p v-else>Buat akun baru untuk menjadi bagian dari kami.</p>
             </div>
             <form @submit.prevent="handleRegister">
               <label for="reg-username" class="field-label">Username</label>
@@ -131,7 +132,7 @@
               </div>
 
               <div class="card-footer">
-                <p>Sudah punya akun? <a href="#" @click.prevent="goAuthType('sign-in')">Masuk di sini.</a></p>
+                <p>Sudah punya akun? <a href="#" @click.prevent="goAuthType('sign-in')">Masuk di sini!</a></p>
               </div>
             </form>
           </div>
@@ -147,10 +148,16 @@ import toast from "@/services/toast";
 import Spinner from "@/components/Spinner.vue";
 import AppButton from "@/components/AppButton.vue";
 import { getUserProfile } from "@/services/api";
+import { useRoute } from 'vue-router';
 
 export default {
   name: "AuthNextGen",
   components: { Spinner, AppButton },
+  setup() {
+    const route = useRoute()
+    
+    return { route }
+  },
   data() {
     return {
       login: {
@@ -165,7 +172,7 @@ export default {
         username: "",
         email: "",
         password: "",
-        role: "seller",
+        role: "",
         loading: false,
         success: false,
         error: null,
@@ -200,8 +207,10 @@ export default {
         }
         const res = await getUserProfile();
         this.currentUser = res;
+        console.log(this.currentUser);
       } catch (e) {
         this.currentUser = null;
+        console.error("Gagal mengambil profil pengguna:", e);
       }
     },
     async handleLogin() {
@@ -251,7 +260,7 @@ export default {
     },
 
     async handleRegister() {
-      if (!this.register.username || !this.register.email || !this.register.password || !this.register.role) {
+      if (!this.register.username || !this.register.email || !this.register.password) {
         this.register.error = "Semua kolom wajib diisi.";
         toast.error(this.register.error);
         return;
@@ -262,22 +271,37 @@ export default {
       this.register.loading = true;
 
       try {
-        const response = await api.post("/register", {
-          username: this.register.username,
-          email: this.register.email,
-          password: this.register.password,
-          role: this.register.role,
-        });
+        let response; // Deklarasi di luar blok if-else
+        
+        if (this.currentUser?.role === 'admin') {
+          response = await api.post("/register/admin", {
+            username: this.register.username,
+            email: this.register.email,
+            password: this.register.password,
+            role: this.register.role,
+          });
+        } else {
+          response = await api.post("/register", {
+            username: this.register.username,
+            email: this.register.email,
+            password: this.register.password,
+          });
+        }
 
         toast.success(response.data.message || "Registrasi berhasil!");
         this.register.success = true;
 
+        // Reset form
         this.register.username = "";
         this.register.email = "";
         this.register.password = "";
         this.register.role = "";
 
-        this.$router.push('/admin');
+        // Redirect setelah delay singkat
+        setTimeout(() => {
+          this.$router.go(-1);
+        }, 800);
+        
       } catch (err) {
         this.register.error = err.response?.data?.message || "Registrasi gagal. Silakan coba lagi.";
         toast.error(this.register.error);
@@ -296,7 +320,6 @@ export default {
 </script>
 
 <style scoped>
-
 @font-face {
   font-family: 'Pixel Operator';
   src: url('@/fonts/PixelOperator.ttf') format('truetype');

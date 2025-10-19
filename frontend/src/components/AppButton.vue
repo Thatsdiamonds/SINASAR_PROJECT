@@ -1,6 +1,6 @@
 <!-- For halaman login, ror gabut ni orang ancen -->
 <template>
-  <button
+  <button :style="buttonStyle"
     :class="['app-btn', type, { loading, success, error }]"
     :disabled="loading"
     @click="$emit('click')"
@@ -28,10 +28,13 @@
 
 <script setup>
 import Spinner from './Spinner.vue'
+import { computed } from 'vue';
 
-defineProps({
+const props = defineProps({
   label: { type: String, default: 'Simpan' },
   loading: { type: Boolean, default: false },
+  success: { type: Boolean, default: false },
+  error: { type: Boolean, default: false },
 
   type: {
     type: String,
@@ -47,7 +50,7 @@ defineProps({
   },
   loadingText: {
     type: String,
-    default: 'Memproses...',
+    default: 'Memproses...', 
   },
   successText: {
     type: String,
@@ -57,7 +60,15 @@ defineProps({
     type: String,
     default: 'Gagal ❌',
   },
-})
+  fontFamily: {
+    type: String,
+    default: 'Minecraft Standard',
+  },
+});
+
+const buttonStyle = computed(() => {
+  return { '--button-font-family': props.fontFamily };
+});
 </script>
 
 <style scoped>
@@ -73,7 +84,7 @@ defineProps({
   align-items: center;
   justify-content: center;
   gap: 8px;
-  font-family: "Minecraft Medium", sans-serif;
+  font-family: var(--button-font-family, "Minecraft Standard", sans-serif);
   border: none;
   border-radius: 10px;
   padding: 10px 20px;

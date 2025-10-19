@@ -57,7 +57,6 @@
   font-weight: 400;
   line-height: 1;
   font-size: .7rem;
-  gap: .5rem; /* jarak antar teks biar rapi */
   white-space: nowrap; /* biar teks gak turun ke line baru */
 }
 

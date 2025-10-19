@@ -19,7 +19,9 @@ const router = createRouter({
     {
       path: '/login',
       name: 'Login',
-      component: () => import('@/views/login-newgen.vue')
+      redirect: to => {
+        return { path: '/auth', query: { 'auth-type': 'sign-in' } }
+      }
     },
     {
       path: '/logout',
@@ -49,28 +51,21 @@ const router = createRouter({
       beforeEnter: (to, from, next) => {
         if (!to.query['auth-type']) {
           next({ 
-            path: to.path, 
+            name: to.name,
             query: { ...to.query, 'auth-type': 'sign-up' }
           })
         } else {
-            next()
+          next()
         }
-  }
+      }
     },
     {
       path: '/register',
       name: 'Register',
-      component: () => import('@/views/auth-nextgen.vue'),
-      beforeEnter: (to, from, next) => {
-        if (!to.query['auth-type']) {
-          next({ 
-            path: to.path, 
-            query: { ...to.query, 'auth-type': 'sign-up' }
-          })
-        } else {
-            next()
-        }
-      }},
+      redirect: to => {
+        return { path: '/auth', query: { 'auth-type': 'sign-up' } }
+      }
+    },
     {
       path: '/auth',
       name: 'AuthNextGen',
@@ -107,7 +102,7 @@ router.beforeEach(async (to, from, next) => {
     return next()
   }
 
-  if (to.path === '/' || to.path === '/login' || to.name === 'Kios Desc' || to.name === 'Register' || to.path === '/auth'   || to.path.startsWith('/detail-kios')) {
+  if (to.path === '/' || to.name === 'Kios Desc' || to.path === '/auth' || to.path.startsWith('/detail-kios')) {
     return next()
   }
 
@@ -121,6 +116,7 @@ router.beforeEach(async (to, from, next) => {
   try {
     const response = await api.get('/user/profile', { silent: true })
     const userRole = response.data.role
+    console.log('User Role:', userRole);
 
     if (to.meta.role && to.meta.role !== userRole) {
       toast.warning('Akses ditolak. Silakan login dengan role yang sesuai.')
