@@ -1,9 +1,16 @@
 <template>
-    <div class="update-container">
+        <div class="update-container">
+          <div class="button" @click="$router.go(-1);" style="margin-bottom: 2rem;">
+            <img src="/icons/drought.svg" alt="Icon" width="auto" height="100%">
+            <div class="text">
+              <a>kembali</a>
+              <a>halaman sebelumnya</a>
+            </div>
+          </div>
         <div class="container-top">
             <div class="left">
                 <div>
-                    <h1>Edit Kios</h1>
+                    <h1 style="color: #247CFF;">Edit Kios</h1>
                     <h2>Halaman untuk mengedit detail informasi kios yang terpilih</h2>
                 </div>
             </div>

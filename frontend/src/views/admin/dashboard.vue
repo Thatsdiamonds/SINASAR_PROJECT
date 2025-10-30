@@ -762,7 +762,7 @@ const removeFotoKiosDraft = () => {
   <div class="body-wrapper">
   <!-- Tombol Aksi - Header -->
   <div class="upperButtonMenu marginbttm">
-    <div class="button" @click="$router.push('/logout');"
+    <div class="button" @click="this.$router.replace('/logout');"
       style="--border-color: #ff5b5b; --bg-color: #ff5b5b; --bg-hov: #f54f4f; --border-hov: #f54f4f; --color: #fff; --sub-color: #fff;">
         <img src="/icons/drought.svg" alt="Icon" width="auto" height="100%">
       <div class="text">

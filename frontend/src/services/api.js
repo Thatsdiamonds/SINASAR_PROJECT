@@ -35,8 +35,17 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem("token");
-      window.location.href = "/login";
+      const hadToken = !!localStorage.getItem("token");
+      const path = typeof window !== "undefined" ? window.location.pathname : "";
+      const isPublicPath = path === "/" || path === "/auth" || path === "/detail-kios" || path.startsWith("/seller/dashboard/detail-kios");
+
+      // Jika token ada dan 401, hapus token. Redirect hanya di halaman non-publik.
+      if (hadToken) {
+        localStorage.removeItem("token");
+        if (!isPublicPath) {
+          window.location.href = "/login";
+        }
+      }
     }
 
     if (!error.config?.silent) {

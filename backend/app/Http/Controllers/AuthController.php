@@ -95,14 +95,14 @@ class AuthController extends Controller
     {
         //Biar gampang pas frontend request ror
         $user = $request->user();
-        $penjual = Penjual::find(1);
+        $penjual = Penjual::where('user_id', $user->id)->first();
 
         return response()->json([
             'id' => $user->id,
             'username' => $user->username,
             'email' => $user->email,
             'role' => $user->role,
-            'penjualId' => $penjual->id,
+            'penjualId' => $penjual?->id,
             'created_at' => $user->created_at
         ]);
     }

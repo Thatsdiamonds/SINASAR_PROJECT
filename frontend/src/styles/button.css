@@ -10,7 +10,6 @@
   all: unset;
   display: inline-flex;
   height: fit-content;
-  align-items: center;
   width: fit-content;
   border-radius: 0;
   padding: .8rem 1.4rem;
@@ -25,6 +24,8 @@
     box-shadow 0.1s,
     border-color 0.1s;
   justify-content: center;
+  align-content: center;
+  align-items: center;
   flex-wrap: nowrap;
 }
 
