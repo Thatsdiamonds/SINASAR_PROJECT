@@ -9,6 +9,7 @@ Route::post('/register', [AuthController::class, 'register']); // self-register 
 Route::post('/login', [AuthController::class, 'login']); //DONEEEE
 Route::get('/penjual', [PenjualController::class, 'index']); //DONEEEE
 Route::get('/penjual/{id}', [PenjualController::class, 'show']); //DONEEEE
+Route::get('/penjual/{lokasi}', [PenjualController::class, 'showLokasi']); //DONEEEE
 Route::get('/penjual/detail/{lokasi}', [PenjualController::class, 'details']); //DONEEEE
 Route::get('/denah', [PenjualController::class, 'getDenahSVG']); //DONEEEE
 

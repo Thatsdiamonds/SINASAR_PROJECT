@@ -54,6 +54,18 @@ class PenjualController extends Controller
         return response()->json($penjual);
     }
 
+    public function showLokasi($id)
+    {
+        $penjual = Penjual::with('user')->findOrFail($id);
+
+        $user = Auth::user();
+        if ($user->role === 'seller' && $penjual->user_id !== $user->id) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        return response()->json($penjual);
+    }
+
     public function update(Request $request, $id)
     {
         $penjual = Penjual::findOrFail($id);
