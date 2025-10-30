@@ -73,20 +73,73 @@ async function renderSvg() {
   if (!svgContainer.value) return;
   svgContainer.value.innerHTML = svgContent.value;
 
-  const rects = svgContainer.value.querySelectorAll("rect");
+  const svg = svgContainer.value.querySelector('svg');
+  const rects = svg.querySelectorAll("rect[id^='L']");
+
   rects.forEach(rect => {
-    rect.addEventListener("mouseover", () => emit("rect-hover", rect.id));
-    rect.addEventListener("mouseout", () => emit("rect-out"));
-    rect.addEventListener("click", () => emit("click", rect.id)); // 🟢 tangkap klik kios
+    const kiosId = rect.id;
+
+    // Hover event untuk rect
+    rect.addEventListener("mouseover", () => {
+      emit("rect-hover", kiosId);
+      setLabelHoverState(kiosId, true); // 🟢 sinkronkan hover label
+    });
+    rect.addEventListener("mouseout", () => {
+      emit("rect-out");
+      setLabelHoverState(kiosId, false);
+    });
+
+    // Klik event tetap ada
+    rect.addEventListener("click", () => emit("click", kiosId));
+
     rect.style.transition = "all 0.2s ease";
     rect.style.cursor = "pointer";
-    rect.classList.add('kios-rect');
+    rect.classList.add("kios-rect");
   });
 
   updateRectStates();
-  await addKiosTextLabelsToSvg();
-  updateLabelStates(); // 🟢 update posisi label awal
+  await addKiosTextLabelsToSvg(svg);
+
+  // 🟢 Tambahkan sinkronisasi hover untuk label juga
+  const labelGroups = svg.querySelectorAll(".kios-svg-label-group");
+  labelGroups.forEach(g => {
+    const kiosId = g.getAttribute("data-kios-id");
+    g.addEventListener("mouseover", () => {
+      emit("rect-hover", kiosId);
+      setLabelHoverState(kiosId, true);
+    });
+    g.addEventListener("mouseout", () => {
+      emit("rect-out");
+      setLabelHoverState(kiosId, false);
+    });
+  });
+
+  updateLabelStates();
 }
+
+// 🟢 Fungsi bantu agar hover label & rect sinkron
+function setLabelHoverState(kiosId, isHovering) {
+  const svg = svgContainer.value?.querySelector("svg");
+  if (!svg) return;
+
+  const rect = svg.querySelector(`#${CSS.escape(kiosId)}`);
+  const group = svg.querySelector(`.kios-svg-label-group[data-kios-id="${CSS.escape(kiosId)}"]`);
+
+  if (!rect || !group) return;
+
+  // Tambah / hapus class hover
+  if (isHovering) {
+    rect.classList.add("hover-state");
+    group.classList.add("label-hover");
+  } else {
+    rect.classList.remove("hover-state");
+    group.classList.remove("label-hover");
+  }
+
+  // Update gaya label visual
+  updateLabelStates();
+}
+
 
 // === Tambahkan dua baris label: ID + username ===
 async function addKiosTextLabelsToSvg() {
@@ -222,19 +275,6 @@ function updateRectStates() {
   });
 }
 
-function applyHoverState(rect) {
-  rect.classList.add('hover-state');
-  rect.style.filter = "brightness(1.1)";
-  rect.style.stroke = "#024196";
-  rect.style.strokeWidth = "2";
-}
-
-function applySelectedState(rect) {
-  rect.classList.add('selected-state');
-  rect.style.filter = "brightness(1.2)";
-  rect.style.stroke = "#FF6B35";
-  rect.style.strokeWidth = "3";
-}
 
 function applyOccupiedState(rect) {
   rect.classList.add('occupied-state');
@@ -313,3 +353,13 @@ async function reloadSvg() {
 
 defineExpose({ reloadSvg });
 </script>
+
+<style>
+.kios-svg-label-group.label-hover text {
+  transform: translateY(1rem);
+  transition: all 0.25s ease;
+}
+text {
+  transition: all 0.25s ease;
+}
+</style>
