@@ -4,13 +4,14 @@
 
 <script setup>
 import { ref, onMounted, watch, nextTick } from "vue";
-import api, { apiBase } from "@/services/api";
+import api from "@/services/api";
 
 const props = defineProps({
   hoveredRect: String,
-  selectedKios: String, // Kios yang dipilih dari pencarian
-  isSearchMode: Boolean, // Mode pencarian aktif
-  occupiedKiosIds: { type: Array, default: () => [] } // Daftar kios terpakai dari API
+  isSearchMode: Boolean,
+  selectedKios: String,
+  occupiedKiosIds: { type: Array, default: () => [] }, // Daftar kios terpakai dari API
+  kiosImageMap: { type: Object, default: () => ({}) } // Peta lokasi→URL gambar kios
 });
 
 const svgContent = ref("");
@@ -52,6 +53,10 @@ watch(() => props.isSearchMode, () => {
 });
 
 watch(() => props.occupiedKiosIds, () => {
+  updateRectStates();
+});
+
+watch(() => props.kiosImageMap, () => {
   updateRectStates();
 });
 
@@ -116,7 +121,7 @@ function addKiosTextLabelsToSvg() {
     text.setAttribute('font-size', '11');
     text.setAttribute('font-family', 'Arial, sans-serif');
     text.setAttribute('font-weight', 'bold');
-    text.setAttribute('fill', '#333');
+    text.setAttribute('fill', '#333'); //tandain
     text.setAttribute('stroke', 'white');
     text.setAttribute('stroke-width', '2');
     text.setAttribute('paint-order', 'stroke');
@@ -149,19 +154,25 @@ function updateRectStates() {
     rect.style.filter = "";
     rect.style.stroke = "";
     rect.style.strokeWidth = "";
-    // Reset fill hanya jika bukan terpakai (biarkan SVG asli menentukan warna default)
-    // Catatan: jangan reset fill di sini agar warna asli SVG tetap ada saat tidak occupied
+    // Reset attribute image flag
+    rect.removeAttribute('data-has-image');
     
-    // Apply state berdasarkan kondisi
+    // Terapkan gambar kios jika tersedia
+    try {
+      const imageUrl = props.kiosImageMap && props.kiosImageMap[rect.id];
+      if (typeof imageUrl === 'string' && imageUrl.trim() !== '') {
+        setRectImage(rect, imageUrl);
+      }
+    } catch {}
     if (occupiedSet.has(rect.id)) {
-      // Tandai kios terpakai
+      //  kios terpakai
       applyOccupiedState(rect);
     }
     if (rect.id === props.selectedKios && props.isSearchMode) {
-      // State SELECTED - Kios yang dipilih dari pencarian
+      // State SELECTED
       applySelectedState(rect);
     } else if (rect.id === props.hoveredRect) {
-      // State HOVER - Kios yang sedang di-hover
+      // State HOVER
       applyHoverState(rect);
     }
   });
@@ -230,16 +241,62 @@ function applySelectedState(rect) {
   rect.style.boxShadow = "0 0 10px rgba(255, 107, 53, 0.6)";
 }
 
+function setRectImage(rect, imageUrl) {
+  const svg = rect.ownerSVGElement;
+  if (!svg || !imageUrl) return;
+  const svgns = "http://www.w3.org/2000/svg";
+  const patternId = `pattern-${rect.id}`;
+
+  let pattern = svg.querySelector(`#${CSS.escape(patternId)}`);
+  if (!pattern) {
+    pattern = document.createElementNS(svgns, 'pattern');
+    pattern.setAttribute('id', patternId);
+    pattern.setAttribute('patternUnits', 'objectBoundingBox');
+    pattern.setAttribute('width', '1');
+    pattern.setAttribute('height', '1');
+
+    const image = document.createElementNS(svgns, 'image');
+    image.setAttribute('href', imageUrl);
+    image.setAttribute('width', 'match-parent');
+    image.setAttribute('height', 'match-parent');
+    image.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+
+    pattern.appendChild(image);
+
+    let defs = svg.querySelector('defs');
+    if (!defs) {
+      defs = document.createElementNS(svgns, 'defs');
+      svg.insertBefore(defs, svg.firstChild);
+    }
+    defs.appendChild(pattern);
+  } else {
+    const image = pattern.querySelector('image');
+    if (image) image.setAttribute('href', imageUrl);
+  }
+
+  rect.style.fill = `url(#${patternId})`;
+  rect.setAttribute('data-has-image','true');
+}
+
 function applyOccupiedState(rect) {
   rect.classList.add('occupied-state');
-  // Warna isi lembut untuk menandai terpakai tanpa mengganggu hover/selected
-  rect.style.fill = '#cfffd9';
-  rect.style.opacity = '1';
+  
+  const hasImage = rect.getAttribute('data-has-image') === 'true';
+  if (!hasImage) {
+    // Warna isi lembut untuk menandai terpakai tanpa mengganggu hover/selected
+    rect.style.fill = '#cfffd9';
+    rect.style.opacity = '1';
+  } else {
+    // Jika ada gambar, atur sedikit transparansi agar label tetap terlihat
+    rect.style.opacity = '0.95';
+  }
+  
   // Tambah stroke halus agar terlihat jelas saat tidak di-hover
   if (!rect.classList.contains('hover-state') && !rect.classList.contains('selected-state')) {
     rect.style.stroke = '#d7fade';
     rect.style.strokeWidth = '1.5';
   }
+  
   // Tooltip sederhana
   rect.setAttribute('data-occupied', 'true');
   rect.setAttribute('title', `${rect.id} (Terpakai)`);
@@ -392,63 +449,7 @@ function getCurrentTransform(element) {
   return { x: 0, y: 0, scale: 1, rotation: 0 };
 }
 
-// Advanced version with viewport-aware centering
-function centerOnKiosViewportAware(kiosId, options = {}) {
-  const config = {
-    respectViewportBounds: true,
-    smoothTransition: true,
-    debugMode: false,
-    ...options
-  };
 
-  return centerOnKios(kiosId, config).then(transformData => {
-    if (config.respectViewportBounds) {
-      // Ensure the centered element doesn't go outside viewport bounds
-      const adjustedTransform = constrainToViewport(transformData);
-      
-      if (config.debugMode) {
-        console.log('Original transform:', transformData);
-        console.log('Adjusted transform:', adjustedTransform);
-      }
-      
-      return adjustedTransform;
-    }
-    
-    return transformData;
-  });
-}
-
-// Helper to constrain centering within viewport bounds
-function constrainToViewport(transformData) {
-  const { containerBounds, targetBounds, offsetX, offsetY } = transformData;
-  
-  // Calculate bounds after transform
-  const newTargetX = targetBounds.centerX + offsetX;
-  const newTargetY = targetBounds.centerY + offsetY;
-  
-  // Constrain to viewport
-  const constrainedX = Math.max(
-    targetBounds.width / 2,
-    Math.min(containerBounds.width - targetBounds.width / 2, newTargetX)
-  );
-  
-  const constrainedY = Math.max(
-    targetBounds.height / 2,
-    Math.min(containerBounds.height - targetBounds.height / 2, newTargetY)
-  );
-  
-  // Recalculate offsets with constraints
-  const adjustedOffsetX = constrainedX - targetBounds.centerX;
-  const adjustedOffsetY = constrainedY - targetBounds.centerY;
-  
-  return {
-    ...transformData,
-    offsetX: adjustedOffsetX,
-    offsetY: adjustedOffsetY,
-    constrained: true,
-    originalOffset: { x: offsetX, y: offsetY }
-  };
-}
 
 // Utility function for batch centering operations
 async function centerOnMultipleKios(kiosIds, options = {}) {

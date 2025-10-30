@@ -1,5 +1,19 @@
 <template>
   <div class="auth-body">
+    <div class="button cheatingBtn" @click="$router.go(-1);"style="
+                    --border-color: #E3E8EF;
+                    --bg-color: white;
+                    --color: #024196;
+                    --sub-color: #0241969a;
+                    --border-hov: #247CFF;
+                    --bg-hov: #F8FAFD;"
+                     >
+          <img src="/icons/drought.svg" alt="Icon" width="auto" height="100%">
+        <div class="text">
+          <a>kembali</a>
+          <a>halaman sebelumnya</a>
+        </div>
+      </div>
     <main class="auth-main">
       <div class="auth-card" :class="{ animating: isAnimating }" :aria-busy="isAnimating">
         <transition name="auth-inner" mode="out-in" @before-enter="onBeforeEnter" @after-enter="onAfterEnter" @before-leave="onBeforeLeave" @after-leave="onAfterLeave">
@@ -302,9 +316,9 @@ export default {
 
         toast.success("Login berhasil!");
         if (response.data.role === "admin") {
-          this.$router.push("/admin/dashboard");
+          this.$router.replace('/admin/dashboard');
         } else if (response.data.role === "seller") {
-          this.$router.push("/seller/dashboard/detail-kios?lokasi=" + response.data.lokasi);
+          this.$router.replace("/seller/dashboard/detail-kios?lokasi=" + response.data.lokasi);
         }
       } catch (err) {
         this.login.error = err.response?.data?.message || "Login gagal. Silakan coba lagi.";
@@ -365,12 +379,11 @@ export default {
       }
     },
     proceedSignOut() {
-       // Redirect ke state B tanpa menambahkan ke history
+       // tanpa ke history
        this.$router.replace('/auth?auth-type=sign-out-proceed');
      },
 
      handleAuthStateActions() {
-       // Jalankan alur berdasarkan state di URL
        // State B: sign-out-proceed
        if (this.isSignOutProceed && !this.signOutActionStarted) {
          this.signOutActionStarted = true;
@@ -402,12 +415,9 @@ export default {
        } catch (error) {
          console.warn("Gagal revoke token:", error);
        } finally {
-         // Hapus localStorage
-         localStorage.removeItem('token');
-         // Tampilkan toast
-         toast.info('Anda telah logout.');
-         // Redirect ke login
-         this.$router.push('/login');
+            localStorage.removeItem('token');
+            toast.info('Anda telah logout.');
+            this.$router.replace('/login');
        }
      },
   },
@@ -417,7 +427,6 @@ export default {
       this.goAuthType('sign-in');
     }
     this.fetchCurrentUser();
-    // Jalankan handler agar state proses bekerja tanpa perlu refresh
     this.handleAuthStateActions();
   },
   watch: {
@@ -463,9 +472,14 @@ export default {
   from { transform: translateY(30px); opacity: 0;}
   to { transform: translateY(0); opacity: 1;}
 }
+@keyframes opacity {
+  from { opacity: 0;}
+  to { opacity: 1;}
+}
 
 .auth-body {
-  background-image: url("/bg-login.png");
+  /* background-image: url("/bg-login.png"); */
+  background-image: url('/bg-pasar.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -475,6 +489,25 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  &::after {
+    content: " ";
+    filter: blur(100px);
+     -webkit-backdrop-filter: blur(80px);
+    width: 100dvw;
+    height: 100dvh;
+    position: absolute;
+    background-color: #00000060;
+    animation: opacity 1s cubic-bezier(.90,.03,.69,.82);
+    
+  }
+}
+
+.cheatingBtn {
+  position: absolute;
+  top: 2.2rem;
+  left: 2.2rem;
+  z-index: 99;
+  animation: opacity .5s cubic-bezier(.90,.03,.69,.82);
 }
 
 .auth-main { display: flex; justify-content: center; align-items: center; z-index: 1; }
@@ -506,11 +539,10 @@ export default {
   border-radius: 14px;
   width: min-content;
   min-width: 28dvw;
-  max-width: 28dvw;
   overflow: hidden;
   gap: 1.2rem;
   padding: 2.4rem;
-  background: linear-gradient(to top, rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.64));
+  background: linear-gradient(to top, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.8));
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   position: relative;
@@ -537,15 +569,14 @@ select { width: 100%; }
 /* Shared form styles */
 .field-label { font-family: "Minecraft", sans-serif; font-size: 16px; margin-top: 10px; }
 .input-group {
+  background: rgba(255, 255, 255, 0.466);
   position: relative;
   display: flex;
   align-items: center;
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
   margin: .4rem 0;
   border: 1.4px solid rgba(0,0,0,0.8);
 
-  input {    
+  input {
     background: rgba(255, 255, 255, 0.140);
     box-sizing: border-box;
     font-family: "Pixel Operator", sans-serif;

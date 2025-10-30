@@ -113,11 +113,11 @@ span {
   }
 }
 .app-btn.buttonSubmit2 {
-  background: #33C3F0;
+  background: #00a846;
   color: white;
 
   &:hover {
-    background: #5ccfff;
+    background: #07c556;
   }
 }
 .app-btn.primary:hover {

@@ -6,8 +6,7 @@
             <h2>Jl. Prabangsa No. 4 Pati</h2>
         </div>
         <div class="right">
-            <div style="display: inline-flex; gap: 1rem;">
-              <div class="button" 
+          <div class="button" 
                    @click="toggle"
                    style="
                     --border-color: #E3E8EF;
@@ -15,14 +14,12 @@
                     --color: #024196;
                     --sub-color: #0241969a;
                     --border-hov: #247CFF;
-                    --bg-hov: #F8FAFD;
-                    "
-
+                    --bg-hov: #F8FAFD;"
                     >
-                <img src="/icons/lampu_suar.svg" alt="Icon" width="auto" height="100%">
+                <img src="/icons/magnifier.png" alt="Icon" width="auto" height="100%">
                   <div class="text">
                     <h3>Cari kios...</h3>
-                    <h4>Klik di sini atau klik "/" untuk membuka menu </h4>
+                    <h4 class="r-mobile">Klik di sini atau klik "/" untuk membuka menu </h4>
                   </div>
               </div>
 
@@ -39,7 +36,7 @@
                 <img src="/icons/heart.svg" alt="Icon" width="auto" height="100%">
                   <div class="text">
                     <h3>Login</h3>
-                    <h4>Masuk ke akun Anda</h4>
+                    <h4 class="r-mobile">Masuk ke akun Anda</h4>
                   </div>
               </div>
 
@@ -67,16 +64,15 @@
                       <h4>Panel konfigurasi Admin</h4>
                     </div>
                 </div>
-                <div class="button" @click="$router.push('/auth?auth-type=sign-out&auto-proceed=true');"
+                <div class="button" @click="router.push('/auth?auth-type=sign-out');"
                   style="--border-color: #ff5b5b; --bg-color: #ff5b5b; --bg-hov: #f54f4f; --border-hov: #f54f4f; --color: #fff; --sub-color: #fff;">
-                    <img src="/icons/drought.svg" alt="Icon" width="auto" height="100%">
+                    <img src="/icons/logout.png" alt="Icon" width="auto" height="100%">
                   <div class="text">
                     <h3>Logout</h3>
                     <h4>Keluar dari akun Anda</h4>
                   </div>
                 </div>
               </div>
-          </div>
         </div>
     </nav>
     <div class="maps-controls">
@@ -111,6 +107,8 @@
         :selectedKios="selectedKiosId"
         :isSearchMode="isVisible"
         :occupiedKiosIds="occupiedKiosIds"
+        :selectedPenjual="selectedPenjual"
+        :kiosImageMap="kiosImageMap"
         @rect-hover="onRectHover"
         @rect-out="onRectOut"
         @click="onSvgClick"
@@ -233,7 +231,7 @@
         <p>{{ selectedPenjual.kontak || 'Tidak ada informasi kontak' }}</p>
       </div>
       
-      <button id="detail_kios" class="lihat-lokasi-btn" @click="$router.push(`detail-kios?lokasi=${selectedPenjual.lokasi}`)">
+      <button id="detail_kios" class="lihat-lokasi-btn" @click="router.push(`detail-kios?lokasi=${selectedPenjual.lokasi}`)">
         <img src="/icons/Eye.svg" alt="Lokasi" class="btn-icon">
         Detail Kios
       </button>
@@ -305,8 +303,10 @@
   position: absolute;
   top: 2rem;
   width: 100dvw;
+  flex-direction: column;
   display: flex;
   justify-content: center;
+  align-items: center;
   transform: translateY(0) scale(1);
   transition: transform 0.3s ease-out;
   pointer-events: none;
@@ -332,9 +332,10 @@ nav {
 }
 
 .maps-area {
-  height: 100%;
-  width: 100%;
+  touch-action: manipulation;
   overflow: hidden;
+  height: 100dvh;
+  width: 100dvw;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -346,10 +347,10 @@ nav {
 }
 
 .maps-controls {
-  position: absolute;
+  position: relative;
   width: 96%;
   display: flex;
-  top: 8rem;
+  top: .8rem;
   justify-content: end;
   display: flex;
   pointer-events: none;
@@ -360,8 +361,9 @@ nav {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 45px;
-  height: 45px;
+  width: fit;
+  height: fit;
+  padding: 1rem;
   background: rgba(255, 255, 255, 0.9);
   border: 2px solid #247CFF;
   border-radius: 6px;
@@ -407,6 +409,7 @@ nav .right {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 1rem;
 }
 
 nav .right .button {
@@ -459,11 +462,6 @@ nav .right h4 {
   font-family: 'Pixel Operator', sans-serif;
   font-weight: 100;
   font-size: 1rem;
-}
-
-nav .right .text {
-  display: flex;
-  flex-direction: column;
 }
 
 html {
@@ -929,6 +927,49 @@ html {
   transform: translateY(-1px);
 }
 
+@media (max-width: 768px) {
+  .r-mobile {
+    display: none;
+  }
+  .relative {
+    top: 0;
+
+    nav {
+      padding: 4dvw;
+      width: 100%;
+      border: none;
+      flex-direction: column;
+      gap: 1rem;
+      
+      .left {
+        width: 100%;
+      }
+
+      .right {
+        width: 100%;
+        display: flex;
+        align-items: normal;
+        justify-content: normal;
+        gap: 1rem;
+        
+        .button {
+          padding: .2rem .6rem;
+          width: fit-content;
+          &:first-child {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+  .sideLeft-container {   
+    min-width: 100%;
+    max-width: 100%;
+  }
+  .maps-controls button {
+    padding: .6rem;
+  }
+}
 </style>
 
 <script setup>
@@ -937,7 +978,7 @@ import toast from "@/services/toast";
 import PasarOwi from "./admin/PasarOwi.vue";
 import api from "@/services/api";
 import { getUserRole } from "@/services/api";
-import { getAllSellerProfile } from "@/services/api";
+import { getAllSellerProfile, getUserProfile } from "@/services/api";
 import { useRouter } from "vue-router";
 import { toPublicUrl } from "@/services/image";
 import 'js-loading-overlay'
@@ -948,22 +989,22 @@ const userRole = ref(null);
 
 const fetchUserKiosLocation = async () => {
   try {
-    if (userRole.value == "admin") return;
-    else if (userRole.value == "seller") {
-      const response = await api.get('/my-kios');
-      userKiosLocation.value = response.data.lokasi;
+    if (localStorage.getItem('token')) {
+      const res = await getUserProfile();
+      userKiosLocation.value = res.lokasi;
     }
   } catch (error) {
-    toast.error("Gagal mengambil informasi pengguna.");
+    toast.error("Gagal mengambil data pengguna.", error)
+    console.log(error);
   }
 };
 
 onMounted(() => {
+  fetchUserKiosLocation();
   if (isAuthenticated.value) {
     getUserRole().then(role => {
       userRole.value = role;
     });
-    fetchUserKiosLocation();
   }
 });
 
@@ -1013,11 +1054,6 @@ const filteredPenjual = computed(() => {
   );
 });
 
-// Cek apakah ada hasil pencarian yang ditemukan
-const hasResults = computed(() => {
-  return Text.value.trim() && filteredPenjual.value.length > 0;
-});
-
 // Kumpulan ID kios terpakai untuk penandaan di denah
 const occupiedKiosIds = computed(() => {
   try {
@@ -1026,6 +1062,26 @@ const occupiedKiosIds = computed(() => {
       .filter(v => typeof v === 'string' && v.trim() !== '');
   } catch {
     return [];
+  }
+});
+
+// Peta lokasi → URL gambar kios untuk ditampilkan di denah
+const kiosImageMap = computed(() => {
+  try {
+    const map = {};
+    for (const p of (penjualList.value || [])) {
+      const lokasi = p?.lokasi;
+      const foto = p?.foto_profil;
+      if (
+        typeof lokasi === 'string' && lokasi.trim() !== '' &&
+        typeof foto === 'string' && foto.trim() !== ''
+      ) {
+        map[lokasi] = toPublicUrl(foto);
+      }
+    }
+    return map;
+  } catch {
+    return {};
   }
 });
 
@@ -1072,7 +1128,7 @@ const zoomOut = () => {
 };
 
 function resetView() {
-  scale.value = 1;
+  scale.value = 1.4;
   offset.value = { x: 0, y: 70 };
 }
 
@@ -1132,7 +1188,6 @@ async function fetchAllPenjual() {
   }
 }
 
-
 function updateHoverText() {
   if (!lastFetched.value) {
     hoverText.value = "Belum pernah diambil";
@@ -1164,7 +1219,7 @@ async function fetchPenjualById(id) {
       return; // gunakan cache, tidak perlu hit API detail
     }
     
-    const res = await getUserRole.get(`/penjual/detail/${lokasi}`, { silent: true });
+    const res = await api.get(`/penjual/detail/${lokasi}`, { silent: true });
     
     // Cek apakah data ditemukan
     if (res.data.data && Object.keys(res.data.data).length > 0) {
@@ -1250,6 +1305,7 @@ async function onSvgClick(e) {
 function onCenterOnKios(data) {
   const { offsetX, offsetY } = data;
   
+  resetView();
   // Update offset untuk centering kios yang dipilih
   offset.value = {
     x: offset.value.x + offsetX,

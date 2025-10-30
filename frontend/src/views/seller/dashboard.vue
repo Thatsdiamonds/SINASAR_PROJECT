@@ -1,7 +1,7 @@
 <template>
   <!-- Tombol Aksi - Header -->
   <div class="upperButtonMenu marginbttm">
-    <div class="button" @click="$router.push('/logout');">
+    <div class="button" @click="this.$router.replace('/logout');">
         <img src="/icons/drought.svg" alt="Icon" width="auto" height="100%">
       <div class="text">
         <a>kembali</a>
