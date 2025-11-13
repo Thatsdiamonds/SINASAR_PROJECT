@@ -33,7 +33,7 @@
                 --bg-hov: #438fff;
                 "
                 >
-                <img src="/icons/heart.svg" alt="Icon" width="auto" height="100%">
+                <img src="/icons/login.png" alt="Icon" width="auto" height="100%">
                   <div class="text">
                     <h3>Login</h3>
                     <h4 class="r-mobile">Masuk ke akun Anda</h4>

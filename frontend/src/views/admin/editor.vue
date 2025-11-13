@@ -1,218 +1,203 @@
 <template>
-  <div class="app" style="display:flex; height:100vh; font-family:Arial, Helvetica, sans-serif;">
+  <div class="app">
     <!-- Sidebar -->
-    <aside style="width:220px; padding:16px; border-right:1px solid #e5e7eb; box-sizing:border-box; overflow-y:auto;">
-      <h2 style="margin:0 0 12px 0">Palette</h2>
+    <aside class="sidebar">
+      <div v-if="!selected">
+        <h2 class="sidebar-title">Palette</h2>
 
-      <div v-for="item in palette" :key="item.type" style="margin-bottom:10px;">
-        <div
-          class="draggable"
-          draggable="true"
-          @dragstart="onPaletteDragStart($event, item)"
-          style="padding:8px; border-radius:6px; background:#f8fafc; cursor:grab; border:1px solid #e2e8f0;"
-        >
-          {{ item.label }}
+        <div v-for="item in palette" :key="item.type" class="palette-item">
+          <div
+            class="draggable"
+            draggable="true"
+            @dragstart="onPaletteDragStart($event, item)"
+          >
+            {{ item.label }}
+          </div>
         </div>
-      </div>
 
-      <hr style="margin:12px 0" />
-      
-      <label style="width:100%; padding:8px; margin-bottom:8px; background:#8b5cf6; color:white; border:none; border-radius:4px; cursor:pointer; display:block; text-align:center; box-sizing:border-box;">
-        Import SVG
-        <input ref="fileInput" type="file" accept=".svg,image/svg+xml" @change="importSvg" style="display:none" />
-      </label>
-      
-      <button @click="exportSvg" style="width:100%; padding:8px; margin-bottom:8px; box-sizing:border-box;">Export SVG</button>
-      <button @click="clearAll" style="width:100%; padding:8px; box-sizing:border-box;">Clear All</button>
-
-      <hr style="margin:12px 0" />
-
-      <div v-if="selected">
-        <h3 style="margin:0 0 8px 0">Edit Shape</h3>
+        <hr class="divider" />
         
-        <div style="margin-bottom:8px;">
-          <label style="font-size:13px; display:block; margin-bottom:4px;"><strong>ID:</strong></label>
+        <label class="import-btn">
+          Import SVG
+          <input ref="fileInput" type="file" accept=".svg,image/svg+xml" @change="importSvg" hidden />
+        </label>
+        
+        <button @click="exportSvg" class="btn">Export SVG</button>
+        <button @click="clearAll" class="btn">Clear All</button>
+
+        <hr class="divider" />
+      </div>
+      
+      <div v-if="selected">
+        <h3 class="edit-title">Edit Shape</h3>
+
+        <!-- ID field -->
+        <div class="field">
+          <label><strong>ID:</strong></label>
           <input 
             v-model="tempId" 
             @input="onIdInput"
             @blur="validateAndApplyId"
-            type="text" 
-            style="width:100%; padding:6px; font-family:monospace; font-size:12px; border:1px solid #e2e8f0; border-radius:4px;" 
+            type="text"
+            class="input monospace"
             placeholder="Enter unique ID"
           />
-          <div v-if="idError" style="font-size:11px; color:#ef4444; margin-top:4px;">{{ idError }}</div>
-        </div>
-        
-        <div style="font-size:13px; margin-bottom:8px"><strong>Type:</strong> {{ selected.type }}</div>
-
-        <div style="display:flex; gap:8px; margin-bottom:8px;">
-          <label style="flex:1">x
-            <input v-model.number="selected.x" type="number" style="width:100%" />
-          </label>
-          <label style="flex:1">y
-            <input v-model.number="selected.y" type="number" style="width:100%" />
-          </label>
+          <div v-if="idError" class="error-text">{{ idError }}</div>
         </div>
 
-        <div v-if="selected.type==='rect'" style="display:flex; gap:8px; margin-bottom:8px;">
-          <label style="flex:1">w
-            <input v-model.number="selected.width" type="number" style="width:100%" />
+        <div class="info"><strong>Type:</strong> {{ selected.type }}</div>
+
+        <div class="col">
+          <label class="field">x
+            <input v-model.number="selected.x" type="number" class="input" />
           </label>
-          <label style="flex:1">h
-            <input v-model.number="selected.height" type="number" style="width:100%" />
+          <label class="field">y
+            <input v-model.number="selected.y" type="number" class="input" />
           </label>
         </div>
 
-        <div v-if="selected.type==='circle'" style="margin-bottom:8px;">
+        <div v-if="selected.type==='rect'" class="col">
+          <label class="field">w
+            <input v-model.number="selected.width" type="number" class="input" />
+          </label>
+          <label class="field">h
+            <input v-model.number="selected.height" type="number" class="input" />
+          </label>
+        </div>
+
+        <div v-if="selected.type==='circle'" class="field">
           <label>r
-            <input v-model.number="selected.r" type="number" style="width:100%" />
+            <input v-model.number="selected.r" type="number" class="input" />
           </label>
         </div>
 
-        <div style="margin-bottom:8px;">
+        <div class="field">
           <label>fill
-            <input v-model="selected.fill" type="color" style="width:100%" />
+            <input v-model="selected.fill" type="color" class="input" />
           </label>
         </div>
 
-        <div v-if="selected.type==='text'" style="margin-bottom:8px;">
+        <div v-if="selected.type==='text'" class="field">
           <label>text
-            <input v-model="selected.text" type="text" style="width:100%" />
+            <input v-model="selected.text" type="text" class="input" />
           </label>
         </div>
 
-        <div style="display:flex; gap:8px; margin-top:10px;">
-          <button @click="duplicateSelected" style="flex:1; background:#3b82f6; color:white; border:none; padding:8px; border-radius:4px; cursor:pointer;">Duplicate</button>
-          <button @click="deleteSelected" style="flex:1; background:#ef4444; color:white; border:none; padding:8px; border-radius:4px; cursor:pointer;">Delete</button>
+        <div class="col">
+          <button @click="duplicateSelected" class="btn btn-blue">Duplicate</button>
+          <button @click="deleteSelected" class="btn btn-red">Delete</button>
         </div>
       </div>
 
-      <div v-else style="margin-top:12px; color:#6b7280">Click a shape to select it</div>
+      <div v-else class="hint-text">Click a shape to select it</div>
+      
+    <div class="button cheatingBtn" @click="$router.go(-1);"style="
+                    --border-color: #E3E8EF;
+                    --bg-color: white;
+                    --color: #024196;
+                    --sub-color: #0241969a;
+                    --border-hov: #247CFF;
+                    --bg-hov: #F8FAFD;"
+                     >
+          <img src="/icons/drought.svg" alt="Icon" width="auto" height="100%">
+        <div class="text">
+          <a>kembali</a>
+          <a>halaman sebelumnya</a>
+        </div>
+      </div>
     </aside>
 
     <!-- Canvas -->
-    <div style="max-width: 300px; display:flex; flex-direction:column;">
-      <div style="padding:8px; border-bottom:1px solid #e5e7eb; display:flex; justify-content:space-between; align-items:center;">
-        <div>SVG Drag & Drop — Vue 3</div>
-        <div style="font-size:13px; color:#6b7280">Drag a palette item onto the canvas to add it</div>
-      </div>
+    <div class="canvas-area">
+    <!-- Header -->
+    <div class="canvas-header">
+      <div>SVG Drag & Drop — Vue 3</div>
+      <div class="subtext">Zoom: {{ (zoom * 100).toFixed(0) }}%</div>
+    </div>
 
-      <div style="flex:1; display:flex;">
-        <div style="flex:1; padding:12px; box-sizing:border-box; position:relative">
-          <div
-            ref="svgWrapper"
-            @dragover.prevent
-            @drop="onDrop"
-            style="width:100%; height:100%; border:1px dashed #e6edf3; display:flex; align-items:center; justify-content:center; background:#fbfdff"
-          >
-            <svg
-              ref="svg"
-              :width="canvasWidth"
-              :height="canvasHeight"
-              @click.self="deselectAll"
-              style="background:white; touch-action:none"
-            >
-              <!-- grid -->
-              <defs>
-                <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
-                  <path d="M20 0 L0 0 0 20" fill="none" stroke="#f1f5f9" stroke-width="1" />
-                </pattern>
-              </defs>
-              <rect :width="canvasWidth" :height="canvasHeight" fill="url(#grid)" @click="deselectAll" />
+    <!-- Kontrol zoom (desain seperti maps-controls) -->
+    <div class="maps-controls">
+      <button class="zoom-btn" @click="zoomIn" title="Perbesar">
+        <img src="/icons/plus.svg" alt="Zoom In" />
+      </button>
+      <button class="zoom-btn" @click="zoomOut" title="Perkecil">
+        <img src="/icons/minus.svg" alt="Zoom Out" />
+      </button>
+      <button class="zoom-btn" @click="resetView" title="Reset Tampilan">
+        <img src="/icons/car.svg" alt="Reset" />
+      </button>
+    </div>
 
-              <!-- shapes -->
-              <g v-for="(s, idx) in shapes" :key="s.id" :data-id="s.id">
+    <!-- Wrapper Canvas -->
+    <div 
+      class="canvas-wrapper" 
+      ref="svgWrapper"
+      @pointerdown="startPan"
+      @pointermove="doPan"
+      @pointerup="endPan"
+      @pointercancel="endPan"
+      @wheel.prevent="onWheelZoom"
+      @drop="onDrop"
+      @dragover.prevent
+      @click.self="deselectAll"
+    >
+      <svg
+        ref="svg"
+        :viewBox="`0 0 ${canvasWidth} ${canvasHeight}`"
+        preserveAspectRatio="xMidYMid meet"
+        class="svg-canvas"
+      >
+        <g 
+          v-for="(s, idx) in shapes" :key="s.id" :data-id="s.id"
+          :transform="`translate(${offset.x}, ${offset.y}) scale(${zoom})`"
+          style="transform-origin: 0 0;" 
+        >
+
+            <!-- shapes -->
+              <rect
+                v-if="s.type==='rect'"
+                :id="s.id"
+                :x="s.x"
+                :y="s.y"
+                :width="s.width"
+                :height="s.height"
+                :fill="s.fill"
+                :stroke="isSelected(s) ? '#2563eb' : '#0f172a'"
+                :stroke-width="isSelected(s) ? 2 : 1"
+                @pointerdown.stop="startDrag($event, s)"
+                @click.stop="select(s)"
+                class="shape"
+              />
+
+              <circle
+                v-if="s.type==='circle'"
+                :id="s.id"
+                :cx="s.x"
+                :cy="s.y"
+                :r="s.r"
+                :fill="s.fill"
+                :stroke="isSelected(s) ? '#2563eb' : '#0f172a'"
+                :stroke-width="isSelected(s) ? 2 : 1"
+                @pointerdown.stop="startDrag($event, s)"
+                @click.stop="select(s)"
+                class="shape"
+              />
+
+              <!-- selection handle -->
+              <g v-if="isSelected(s)">
                 <rect
                   v-if="s.type==='rect'"
-                  :id="s.id"
-                  :x="s.x"
-                  :y="s.y"
-                  :width="s.width"
-                  :height="s.height"
-                  :fill="s.fill"
-                  :stroke="isSelected(s) ? '#2563eb' : '#0f172a'"
-                  :stroke-width="isSelected(s) ? 2 : 1"
-                  @pointerdown.stop="startDrag($event, s)"
-                  @click.stop="select(s)"
-                  style="cursor:move"
+                  :x="s.x - 6"
+                  :y="s.y - 6"
+                  width="12"
+                  height="12"
+                  class="resize-handle"
+                  @pointerdown.stop.prevent="startResize($event, s, 'br')"
                 />
-
-                <circle
-                  v-if="s.type==='circle'"
-                  :id="s.id"
-                  :cx="s.x"
-                  :cy="s.y"
-                  :r="s.r"
-                  :fill="s.fill"
-                  :stroke="isSelected(s) ? '#2563eb' : '#0f172a'"
-                  :stroke-width="isSelected(s) ? 2 : 1"
-                  @pointerdown.stop="startDrag($event, s)"
-                  @click.stop="select(s)"
-                  style="cursor:move"
-                />
-
-                <line
-                  v-if="s.type==='line'"
-                  :id="s.id"
-                  :x1="s.x1"
-                  :y1="s.y1"
-                  :x2="s.x2"
-                  :y2="s.y2"
-                  :stroke="s.stroke"
-                  :stroke-width="s.strokeWidth"
-                  @pointerdown.stop="startDrag($event, s)"
-                  @click.stop="select(s)"
-                  style="cursor:move"
-                />
-
-                <text
-                  v-if="s.type==='text'"
-                  :id="s.id"
-                  :x="s.x"
-                  :y="s.y"
-                  :font-size="s.fontSize"
-                  :fill="s.fill"
-                  @pointerdown.stop="startDrag($event, s)"
-                  @click.stop="select(s)"
-                  style="cursor:move; user-select:none"
-                >
-                  {{ s.text }}
-                </text>
-
-                <!-- selection handles -->
-                <g v-if="isSelected(s)">
-                  <rect
-                    v-if="s.type==='rect'"
-                    :x="s.x - 6"
-                    :y="s.y - 6"
-                    width="12"
-                    height="12"
-                    fill="#fff"
-                    stroke="#2563eb"
-                    stroke-width="1"
-                    style="cursor:nwse-resize"
-                    @pointerdown.stop.prevent="startResize($event, s, 'br')"
-                  />
-                </g>
               </g>
-            </svg>
-          </div>
-        </div>
-
-        <!-- Right side: small preview / instructions -->
-        <aside style="width:260px; padding:12px; border-left:1px solid #e5e7eb; box-sizing:border-box;">
-          <h4 style="margin:0 0 8px 0">Tips</h4>
-          <ul style="padding-left:18px; margin:0; font-size:13px">
-            <li>Drag palette items onto canvas to add.</li>
-            <li>Click a shape to select and edit properties.</li>
-            <li>Click empty area to deselect.</li>
-            <li>Import SVG files to edit existing designs.</li>
-            <li>Edit properties in the sidebar and changes apply instantly.</li>
-            <li>Drag shapes to move. Resize rect by dragging corner handle.</li>
-            <li>Export creates a downloadable .svg file.</li>
-          </ul>
-        </aside>
-      </div>
+        </g>
+      </svg>
+    </div>
     </div>
   </div>
 </template>
@@ -223,9 +208,18 @@ import { ref, reactive, onMounted, nextTick, computed } from 'vue'
 const palette = [
   { type: 'rect', label: 'Rectangle' },
   { type: 'circle', label: 'Circle' },
-  { type: 'line', label: 'Line' },
-  { type: 'text', label: 'Text' },
 ]
+
+const canvasWidth = 800
+const canvasHeight = 600
+
+// --- STATE ZOOM & PAN / DRAG ---
+
+const zoom = ref(1)
+const minZoom = 0.2
+const maxZoom = 4
+const offset = ref({ x: 0, y: 0 })
+
 
 const shapes = reactive([])
 const selectedId = ref(null)
@@ -234,11 +228,13 @@ const svgWrapper = ref(null)
 const fileInput = ref(null)
 const idError = ref('')
 const tempId = ref('')
-const canvasWidth = 1000
-const canvasHeight = 700
 
+let isPanning = false
+let panStart = { x: 0, y: 0 }
+let activePointerId = null
 let dragState = null
 let resizeState = null
+
 
 // Computed property untuk mendapatkan shape yang sedang dipilih
 const selected = computed(() => {
@@ -282,16 +278,7 @@ function addShape(type, x = 100, y = 100) {
     shapes.push(Object.assign(base, { x: x - 50, y: y - 25, width: 100, height: 50, fill: '#fef3c7' }))
   } else if (type === 'circle') {
     shapes.push(Object.assign(base, { x, y, r: 40, fill: '#bfdbfe' }))
-  } else if (type === 'line') {
-    shapes.push(Object.assign(base, { x1: x - 40, y1: y - 40, x2: x + 40, y2: y + 40, stroke: '#0f172a', strokeWidth: 2 }))
-  } else if (type === 'text') {
-    shapes.push(Object.assign(base, { x, y, text: 'Hello', fontSize: 24, fill: '#0f172a' }))
   }
-}
-
-function addRandomShape() {
-  const t = palette[Math.floor(Math.random() * palette.length)].type
-  addShape(t, Math.random() * (canvasWidth - 200) + 100, Math.random() * (canvasHeight - 200) + 100)
 }
 
 function select(s) {
@@ -389,6 +376,14 @@ function clearAll() {
 
 // --- Dragging shapes inside SVG ---
 function startDrag(evt, shape) {
+  // evt is pointerdown from shape; stop pan starting
+  evt.stopPropagation && evt.stopPropagation()
+  evt.preventDefault && evt.preventDefault()
+
+  // pointer capture on the target so move/up are delivered reliably
+  activePointerId = evt.pointerId ?? null
+  try { evt.target.setPointerCapture && evt.target.setPointerCapture(activePointerId) } catch (e) { /* ignore */ }
+
   const p = getSvgPoint(evt)
   dragState = {
     shapeId: shape.id,
@@ -397,6 +392,7 @@ function startDrag(evt, shape) {
     orig: JSON.parse(JSON.stringify(shape)),
   }
 
+  // gunakan pointermove/pointerup pada window to be safe
   window.addEventListener('pointermove', onDrag)
   window.addEventListener('pointerup', endDrag)
 
@@ -404,13 +400,15 @@ function startDrag(evt, shape) {
 }
 
 function onDrag(evt) {
+  // ignore if different pointer
+  if (activePointerId != null && evt.pointerId !== activePointerId && dragState && dragState.shapeId) return
   if (!dragState) return
   const p = getSvgPoint(evt)
   const dx = p.x - dragState.startX
   const dy = p.y - dragState.startY
   const s = shapes.find((x) => x.id === dragState.shapeId)
   if (!s) return
-  if (s.type === 'rect') {
+  if (s.type === 'rect' || s.type === 'text') {
     s.x = dragState.orig.x + dx
     s.y = dragState.orig.y + dy
   } else if (s.type === 'circle') {
@@ -421,14 +419,25 @@ function onDrag(evt) {
     s.y1 = dragState.orig.y1 + dy
     s.x2 = dragState.orig.x2 + dx
     s.y2 = dragState.orig.y2 + dy
-  } else if (s.type === 'text') {
-    s.x = dragState.orig.x + dx
-    s.y = dragState.orig.y + dy
   }
 }
 
-function endDrag() {
+function endDrag(evt) {
+  // release pointer capture from last target if any
+  if (activePointerId != null) {
+    try {
+      // try release from svgWrapper or event target
+      if (evt && evt.target && evt.target.releasePointerCapture) {
+        evt.target.releasePointerCapture(activePointerId)
+      }
+      if (svgWrapper.value && svgWrapper.value.releasePointerCapture) {
+        svgWrapper.value.releasePointerCapture(activePointerId)
+      }
+    } catch (e) { /* ignore */ }
+  }
+
   dragState = null
+  activePointerId = null
   window.removeEventListener('pointermove', onDrag)
   window.removeEventListener('pointerup', endDrag)
 }
@@ -462,72 +471,84 @@ function endResize() {
 
 // --- Export ---
 function exportSvg() {
+  resetView()
   const svgEl = svg.value
   const cloned = svgEl.cloneNode(true)
-  
+
   // Hapus atribut data-id dari g wrapper
   const nodes = cloned.querySelectorAll('[data-id]')
   nodes.forEach((n) => n.removeAttribute('data-id'))
-  
+
   // Hapus atribut Vue scoped (data-v-*)
   const allElements = cloned.querySelectorAll('*')
   allElements.forEach(el => {
-    // Hapus semua atribut yang dimulai dengan data-v-
     Array.from(el.attributes).forEach(attr => {
-      if (attr.name.startsWith('data-v-')) {
-        el.removeAttribute(attr.name)
-      }
+      if (attr.name.startsWith('data-v-')) el.removeAttribute(attr.name)
     })
   })
-  
-  // Hapus selection handle group elements
-  const handles = cloned.querySelectorAll('g')
-  handles.forEach((g) => {
-    // Hapus group yang berisi rect handle kecil (12x12)
-    const rect = g.querySelector('rect[width="12"]')
-    if (rect) {
-      g.remove()
-    }
-  })
-  
-  // Bersihkan g wrapper yang kosong dan hanya menyisakan shape dengan ID
-  const groups = cloned.querySelectorAll('g')
-  groups.forEach(g => {
-    // Jika g memiliki child element dengan id, pindahkan child ke parent g
-    const children = Array.from(g.children)
-    if (children.length > 0) {
-      const parent = g.parentNode
-      children.forEach(child => {
-        if (child.hasAttribute('id')) {
-          parent.insertBefore(child, g)
-        }
-      })
-      g.remove()
-    }
-  })
-  
-  // Bersihkan style inline yang tidak perlu
-  const shapesWithId = cloned.querySelectorAll('[id]')
-  shapesWithId.forEach(el => {
-    // Hapus style cursor
-    el.removeAttribute('style')
-    
-    // Reset stroke untuk export (hapus highlight selection)
-    if (el.tagName === 'rect' || el.tagName === 'circle') {
-      el.setAttribute('stroke', '#0f172a')
-      el.setAttribute('stroke-width', '1')
+
+  // Hapus selection handles
+  const handles = cloned.querySelectorAll('rect[width="12"][height="12"]')
+  handles.forEach(h => h.parentNode.removeChild(h))
+
+  // Cari semua shape
+  const shapesEls = cloned.querySelectorAll('rect, circle')
+  if (shapesEls.length === 0) {
+    alert('No shapes to export.')
+    return
+  }
+
+  // Hitung bounding box (min/max x/y)
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity
+
+  shapesEls.forEach(el => {
+    if (el.tagName === 'rect') {
+      const x = parseFloat(el.getAttribute('x') || 0)
+      const y = parseFloat(el.getAttribute('y') || 0)
+      const w = parseFloat(el.getAttribute('width') || 0)
+      const h = parseFloat(el.getAttribute('height') || 0)
+      minX = Math.min(minX, x)
+      minY = Math.min(minY, y)
+      maxX = Math.max(maxX, x + w)
+      maxY = Math.max(maxY, y + h)
+    } else if (el.tagName === 'circle') {
+      const cx = parseFloat(el.getAttribute('cx') || 0)
+      const cy = parseFloat(el.getAttribute('cy') || 0)
+      const r = parseFloat(el.getAttribute('r') || 0)
+      minX = Math.min(minX, cx - r)
+      minY = Math.min(minY, cy - r)
+      maxX = Math.max(maxX, cx + r)
+      maxY = Math.max(maxY, cy + r)
     }
   })
 
+  const width = maxX - minX
+  const height = maxY - minY
+  const padding = 100 // agar tidak terlalu pas di tepi
+
+  // Set viewBox agar sesuai posisi shape
+  cloned.setAttribute('viewBox', `${minX - padding} ${minY - padding} ${width + padding * 2} ${height + padding * 2}`)
+  cloned.setAttribute('width', width + padding * 2)
+  cloned.setAttribute('height', height + padding * 2)
+
+  // Hapus grid background
+  const grid = cloned.querySelector('rect[fill^="url(#grid)"]')
+  if (grid) grid.remove()
+
+  // Hapus style inline tidak perlu
+  shapesEls.forEach(el => el.removeAttribute('style'))
+
   const serializer = new XMLSerializer()
   let source = serializer.serializeToString(cloned)
-  
-  // Bersihkan namespace xmlns yang berlebihan jika ada
-  source = source.replace(/ xmlns="[^"]*"/g, (match, offset) => {
-    // Hanya pertahankan xmlns pertama di tag <svg>
-    return offset < 100 ? match : ''
-  })
-  
+
+  // Pastikan namespace benar
+  if (!source.includes('xmlns="http://www.w3.org/2000/svg"')) {
+    source = source.replace(
+      '<svg',
+      '<svg xmlns="http://www.w3.org/2000/svg"'
+    )
+  }
+
   const blob = new Blob([source], { type: 'image/svg+xml;charset=utf-8' })
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
@@ -536,6 +557,10 @@ function exportSvg() {
   a.click()
   URL.revokeObjectURL(url)
 }
+
+
+
+
 
 // --- Import SVG ---
 function importSvg(event) {
@@ -683,27 +708,274 @@ function parseSvgElements(svgElement) {
   console.log(`Imported ${shapes.length} shapes`)
 }
 
+function zoomIn() {
+  zoom.value = Math.min(maxZoom, zoom.value + 0.1)
+}
+function zoomOut() {
+  zoom.value = Math.max(minZoom, zoom.value - 0.1)
+}
+function resetView() {
+  zoom.value = 1
+  offset.value = { x: 0, y: 0 }
+}
+function onWheelZoom(e) {
+  if (e.ctrlKey || e.metaKey) {
+    e.preventDefault()
+    if (e.deltaY < 0) zoomIn()
+    else zoomOut()
+  }
+}
+function startPan(evt) {
+  // hanya klik kiri / primary pointer
+  if (evt.button !== undefined && evt.button !== 0) return
+
+  // jika klik berasal dari shape atau childnya (memiliki data-id pada wrapper group), abort pan
+  // evt.target mungkin adalah elemen svg child (rect/circle/text...), jadi cek closest
+  const fromShape = evt.target && evt.target.closest && evt.target.closest('[data-id]')
+  if (fromShape) return
+
+  isPanning = true
+  activePointerId = evt.pointerId ?? null
+  panStart = { x: evt.clientX - offset.value.x, y: evt.clientY - offset.value.y }
+
+  // capture pointer to ensure we continue receiving pointermove/pointerup
+  if (svgWrapper.value && svgWrapper.value.setPointerCapture && activePointerId != null) {
+    try { svgWrapper.value.setPointerCapture(activePointerId) } catch (e) { /* ignore */ }
+  }
+}
+
+
+function doPan(evt) {
+  if (!isPanning) return
+  // ignore other pointers
+  if (activePointerId != null && evt.pointerId !== activePointerId) return
+
+  offset.value = {
+    x: evt.clientX - panStart.x,
+    y: evt.clientY - panStart.y
+  }
+}
+function endPan(evt) {
+  if (activePointerId != null && evt && evt.pointerId !== activePointerId) return
+  isPanning = false
+  if (svgWrapper.value && svgWrapper.value.releasePointerCapture && activePointerId != null) {
+    try { svgWrapper.value.releasePointerCapture(activePointerId) } catch (e) { /* ignore */ }
+  }
+  activePointerId = null
+}
+
 onMounted(() => {
-  // create a helpful default
+  svgWrapper.value.addEventListener("wheel", onWheelZoom, { passive: false })
   addShape('rect', 150, 120)
   addShape('circle', 320, 160)
 })
+
 </script>
 
 <style scoped>
-/* small responsive tweaks */
-.draggable:active { cursor:grabbing }
-
-button {
-  cursor: pointer;
-  transition: opacity 0.2s;
+/* Layout utama */
+.app {
+  display: flex;
+  height: 100vh;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
-button:hover {
+/* Sidebar */
+.sidebar {
+  max-width: min-content;
+  padding: 16px;
+  border-right: 1px solid #e5e7eb;
+  box-sizing: border-box;
+}
+.sidebar-title {
+  margin: 0 0 12px 0;
+}
+.palette-item {
+  margin-bottom: 10px;
+}
+.draggable {
+  padding: 8px;
+  border-radius: 6px;
+  background: #f8fafc;
+  cursor: grab;
+  border: 1px solid #e2e8f0;
+}
+.draggable:active {
+  cursor: grabbing;
+}
+
+.import-btn {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 8px;
+  background: #8b5cf6;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: block;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.divider {
+  margin: 12px 0;
+}
+
+.edit-title {
+  margin: 0 0 8px 0;
+}
+
+.field {
+  margin-bottom: 8px;
+}
+.row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.input {
+  width: 100%;
+  padding: 6px;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  font-size: 12px;
+}
+.monospace {
+  font-family: monospace;
+}
+.error-text {
+  font-size: 11px;
+  color: #ef4444;
+  margin-top: 4px;
+}
+.info {
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+.hint-text {
+  margin-top: 12px;
+  color: #6b7280;
+}
+
+/* Tombol */
+.btn {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  background: #e5e7eb;
+  transition: opacity 0.2s;
+  margin: 5px 0;
+}
+.btn:hover {
   opacity: 0.9;
 }
-
-button:active {
+.btn:active {
   opacity: 0.8;
+}
+.btn-blue {
+  background: #3b82f6;
+  color: white;
+}
+.btn-red {
+  background: #ef4444;
+  color: white;
+}
+
+/* Canvas */
+.canvas-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background: #f8fafc;
+}
+.canvas-header {
+  padding: 8px;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.subtext {
+  font-size: 13px;
+  color: #6b7280;
+}
+.canvas-wrapper {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+.svg-canvas {
+  background: white;
+  width: 100%;
+  height: 100%;
+  user-select: none;
+  touch-action: none;
+  transition: transform 0.1s ease-out;
+}
+
+/* --- Kontrol Zoom --- */
+.maps-controls {
+  position: absolute;
+  top: 10vh;
+  right: 2vh;
+  display: flex;
+  gap: 2vh;
+  pointer-events: none;
+  z-index: 10;
+  width: auto;
+}
+
+.maps-controls * {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.zoom-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1vw;
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid #247cff;
+  border-radius: 50%;
+  cursor: pointer;
+  pointer-events: auto;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.zoom-btn img {
+  width: 1.4vw;
+  height: auto;
+}
+
+.zoom-btn:hover {
+  background: #438fff;
+}
+
+.zoom-btn:hover img {
+  filter: brightness(0) invert(1);
+  transform: scale(1.4);
+}
+
+.zoom-btn:active img:first-child {
+  filter: brightness(0) invert(1);
+  transform: scale(1.2);
+}
+/* Shapes */
+.shape {
+  cursor: move;
+}
+.text-shape {
+  user-select: none;
+}
+.resize-handle {
+  fill: #fff;
+  stroke: #2563eb;
+  stroke-width: 1;
+  cursor: nwse-resize;
 }
 </style>
