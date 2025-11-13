@@ -185,7 +185,7 @@ async function addKiosTextLabelsToSvg() {
     textUser.textContent = username;
 
     const icon = document.createElementNS(svgns, 'image');
-    icon.setAttribute('href', '/icons/change_file.svg');
+    icon.setAttribute('href', '/icons/market.svg');
     icon.setAttribute('x', x + 3);
     icon.setAttribute('y', y + 3);
     icon.setAttribute('width', '20');
