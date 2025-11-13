@@ -763,9 +763,9 @@ const removeFotoKiosDraft = () => {
   <div class="body-wrapper">
   <!-- Tombol Aksi - Header -->
   <div class="upperButtonMenu marginbttm">
-    <div class="button" @click="this.$router.replace('/admin/edit-map');"
+    <div class="button" @click="this.$router.replace('/logout');"
       style="--border-color: #ff5b5b; --bg-color: #ff5b5b; --bg-hov: #f54f4f; --border-hov: #f54f4f; --color: #fff; --sub-color: #fff;">
-        <img src="/icons/drought.svg" alt="Icon" width="auto" height="100%">
+        <img src="/icons/logout.png" alt="Icon" width="auto" height="100%">
       <div class="text">
         <a>Logout</a>
         <a>Keluar dari akun Anda</a>
@@ -820,13 +820,12 @@ const removeFotoKiosDraft = () => {
     </div>
 
     <div style="display: inline-flex; gap: 1rem;">
-
       <div class="button" 
            style="--border-color: #e57373; --bg-color: transparent; --color: #e57373; --border-hov: #d32f2f; --bg-hov: #ffebee"
-           @click="resetAllPanels">
+           @click="this.$router.push('/admin/edit-map')">
         <img src="/icons/cancel.svg" alt="Icon" width="auto" height="100%">
           <div class="text">
-          <a>Reset Semua</a>
+          <a>Editor Denah</a>
           </div>
       </div>
     </div>
