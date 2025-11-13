@@ -58,7 +58,7 @@ const spinnerSrc = spinner
   width: v-bind(size);
   height: v-bind(size);
   animation: spin 1s linear infinite;
-  transition: filter 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* warna spinner */
@@ -73,7 +73,7 @@ const spinnerSrc = spinner
 .message_display {
   font-family: "Minecraft Medium";
   transform: translateY(+2px);
-  font-size: 14px;
+  font-size: 1vw;
   font-weight: 500;
   letter-spacing: 0.5px;
 }

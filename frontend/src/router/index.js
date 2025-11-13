@@ -70,6 +70,12 @@ const router = createRouter({
       meta: { role: 'admin' }
     },
     {
+      path: '/admin/edit-map',
+      name: 'AdminEditMap',
+      component: () => import('@/views/admin/editor.vue'),
+      meta: { role: 'admin' }
+    },
+    {
       path: '/seller/dashboard',
       name: 'SellerDashboard',
       component: () => import('@/views/seller/dashboard.vue'),

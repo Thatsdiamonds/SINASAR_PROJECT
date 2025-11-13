@@ -71,21 +71,21 @@ onMounted(() => {
 }
 
 .sad-face {
-  font-size: 120px;
+  font-size: 7vw;
   font-weight: 300;
   margin-bottom: 30px;
   line-height: 1;
 }
 
 .error-title {
-  font-size: 28px;
+  font-size: 1.8vw;
   font-weight: 300;
   margin-bottom: 40px;
   letter-spacing: 0.5px;
 }
 
 .error-message {
-  font-size: 18px;
+  font-size: 1.4vw;
   font-weight: 300;
   line-height: 1.6;
   margin-bottom: 30px;
@@ -96,14 +96,14 @@ onMounted(() => {
 }
 
 .percentage {
-  font-size: 18px;
+  font-size: 1.6vw;
   font-weight: 300;
   margin-top: 5px;
 }
 
 .details {
   margin-top: 50px;
-  font-size: 15px;
+  font-size: 1.4vw;
   font-weight: 300;
   line-height: 1.8;
 }

@@ -79,20 +79,9 @@ async function renderSvg() {
   rects.forEach(rect => {
     const kiosId = rect.id;
 
-    // Hover event untuk rect
-    rect.addEventListener("mouseover", () => {
-      emit("rect-hover", kiosId);
-      setLabelHoverState(kiosId, true); // 🟢 sinkronkan hover label
-    });
-    rect.addEventListener("mouseout", () => {
-      emit("rect-out");
-      setLabelHoverState(kiosId, false);
-    });
-
     // Klik event tetap ada
     rect.addEventListener("click", () => emit("click", kiosId));
 
-    rect.style.transition = "all 0.2s ease";
     rect.style.cursor = "pointer";
     rect.classList.add("kios-rect");
   });
@@ -195,6 +184,15 @@ async function addKiosTextLabelsToSvg() {
     textUser.setAttribute('paint-order', 'stroke');
     textUser.textContent = username;
 
+    const icon = document.createElementNS(svgns, 'image');
+    icon.setAttribute('href', '/icons/change_file.svg');
+    icon.setAttribute('x', x + 3);
+    icon.setAttribute('y', y + 3);
+    icon.setAttribute('width', '20');
+    icon.setAttribute('height', '20');
+    icon.style.pointerEvents = 'none';
+
+
     // 🟢 simpan posisi untuk animasi hover/selected
     textId.setAttribute('data-default-x', centerX);
     textId.setAttribute('data-default-y', topY);
@@ -208,6 +206,7 @@ async function addKiosTextLabelsToSvg() {
 
     g.appendChild(textId);
     g.appendChild(textUser);
+    g.appendChild(icon);
     svg.appendChild(g);
   });
 }
@@ -229,18 +228,15 @@ function updateLabelStates() {
     // Ambil posisi awal dan hover
     const defY = textId.getAttribute('data-default-y');
     const hovY = textId.getAttribute('data-hover-y');
-
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
     if (isSelected) {
-      textId.setAttribute('y', hovY);
       textId.setAttribute('fill', '#e53e3e');
       textId.setAttribute('font-size', '12');
       textUser.setAttribute('fill', '#e53e3e');
     } else if (isHovered) {
-      textId.setAttribute('y', hovY);
       textId.setAttribute('fill', '#2563eb');
       textUser.setAttribute('fill', '#2563eb');
     } else {
-      textId.setAttribute('y', defY);
       textId.setAttribute('fill', '#333');
       textUser.setAttribute('fill', '#2563eb');
     }
@@ -282,7 +278,7 @@ function applyOccupiedState(rect) {
   if (!hasImage) rect.style.fill = '#cfffd9';
   else rect.style.opacity = '0.95';
   rect.style.stroke = '#d7fade';
-  rect.style.strokeWidth = '1.5';
+  rect.style.strokeWidth = '4';
   rect.setAttribute('title', `${rect.id} (Terpakai)`);
 }
 
@@ -298,15 +294,8 @@ function setRectImage(rect, imageUrl) {
     pattern = document.createElementNS(svgns, 'pattern');
     pattern.setAttribute('id', patternId);
     pattern.setAttribute('patternUnits', 'objectBoundingBox');
-    pattern.setAttribute('width', '1');
+    pattern.setAttribute('width', '1'); 
     pattern.setAttribute('height', '1');
-
-    const image = document.createElementNS(svgns, 'image');
-    image.setAttribute('href', imageUrl);
-    image.setAttribute('width', '100%');
-    image.setAttribute('height', '100%');
-    image.setAttribute('preserveAspectRatio', 'xMidYMid meet');
-    pattern.appendChild(image);
 
     let defs = svg.querySelector('defs');
     if (!defs) {
@@ -322,27 +311,7 @@ function setRectImage(rect, imageUrl) {
   rect.style.fill = `url(#${patternId})`;
   rect.setAttribute('data-has-image', 'true');
 }
-
-// === 🟢 Center-on-kios (auto focus posisi saat diklik/selected) ===
-function centerOnKios(kiosId) {
-  if (!svgContainer.value) return;
-  const target = svgContainer.value.querySelector(`#${CSS.escape(kiosId)}`);
-  if (!target) return;
-
-  const container = svgContainer.value;
-  const rect = target.getBoundingClientRect();
-  const containerRect = container.getBoundingClientRect();
-
-  const offsetX = containerRect.width / 2 - (rect.left - containerRect.left) - rect.width / 2;
-  const offsetY = containerRect.height / 2 - (rect.top - containerRect.top) - rect.height / 2;
-
-  container.scrollTo({
-    left: container.scrollLeft - offsetX,
-    top: container.scrollTop - offsetY,
-    behavior: "smooth"
-  });
-}
-
+  
 // === Reload ===
 async function reloadSvg() {
   const res = await api.get('/denah');
@@ -356,7 +325,7 @@ defineExpose({ reloadSvg });
 
 <style>
 .kios-svg-label-group.label-hover text {
-  transform: translateY(1rem);
+  transform: translateY(0%);
   transition: all 0.25s ease;
 }
 text {
