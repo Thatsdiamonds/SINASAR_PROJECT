@@ -51,6 +51,7 @@
                   --bg-hov: #438fff;
                   "
                 >
+                <p>{{$userKiosLocation}}</p>
                   <img src="/icons/heart.svg" alt="Icon" width="auto" height="100%">
                     <div class="text">
                       <h3>Kelola</h3>
@@ -77,13 +78,13 @@
     </nav>
     <div class="maps-controls">
       <button class="zoom-btn" @click="zoomIn" title="Perbesar">
-        <img src="/icons/plus.svg" alt="Zoom In" width="16" height="16">
+        <img src="/icons/plus.svg" alt="Zoom In">
       </button>
       <button class="zoom-btn" @click="zoomOut" title="Perkecil">
-        <img src="/icons/minus.svg" alt="Zoom Out" width="16" height="16">
+        <img src="/icons/minus.svg" alt="Zoom Out">
       </button>
       <button class="zoom-btn" @click="resetView" title="Reset Tampilan">
-        <img src="/icons/car.svg" alt="Reset" width="16" height="16">
+        <img src="/icons/car.svg" alt="Reset">
       </button>
     </div>
 
@@ -140,9 +141,9 @@
             <!-- <div v-if="isLoading" class="loading-container">
               <div class="loading-spinner"></div>
               <p>Memuat data penjual...</p>
-            </div> -->
+            </div>
             
-            <!-- <div v-else-if="filteredPenjual.length === 0" class="empty-state">
+            <div v-else-if="filteredPenjual.length === 0" class="empty-state">
               <p>Tidak ada penjual yang ditemukan</p>
             </div> -->
 <div class="kios-list">
@@ -233,12 +234,12 @@
       
       <button id="detail_kios" class="lihat-lokasi-btn" @click="router.push(`detail-kios?lokasi=${selectedPenjual.lokasi}`)">
         <img src="/icons/Eye.svg" alt="Lokasi" class="btn-icon">
-        Detail Kios
+        <span>Detail Kios</span>
       </button>
       
       <button class="download-denah-btn" @click="downloadDenah">
         <img src="/icons/save.svg" alt="Download" class="btn-icon">
-        Download Denah
+        <span>Download Denah</span>
       </button>
     </div>
   </div>
@@ -289,31 +290,22 @@
   box-shadow: 0 2px 8px rgba(255, 107, 53, 0.2);
 }
 
-/* Efek hover yang lebih jelas untuk kios yang dipilih */
-.kios-item-aktif:hover {
-  background-color: rgba(255, 107, 53, 0.15);
-  transform: translateX(3px);
-}
-* {
-  margin: 0;
-}
-
 .relative {
   z-index: 2;
   position: absolute;
-  top: 2rem;
-  width: 100dvw;
+  top: 0;
+  margin: 4.5vh 0;
+  width: 100vw;
   flex-direction: column;
   display: flex;
   justify-content: center;
   align-items: center;
-  transform: translateY(0) scale(1);
-  transition: transform 0.3s ease-out;
-  pointer-events: none;
+  transform: translateY(0);
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .relative.notVisible {
-  transform: translateY(-140px) scale(0);
+  transform: translateY(-100vh);
 }
 
 nav {
@@ -326,9 +318,11 @@ nav {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   box-shadow: 0 4px 24px 0 rgba(0,0,0,0.08);  
-  padding: 1.2rem;
-  width: 96%;
+  padding: 1.4vw;
+  width: 95%;
+  overflow-y: hidden;
   box-sizing: border-box;
+
 }
 
 .maps-area {
@@ -343,18 +337,22 @@ nav {
   top: 0;
   left: 0;
   cursor: grab;
-  transition: cursor 0.1s;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .maps-controls {
   position: relative;
-  width: 96%;
+  width: 95%;
   display: flex;
-  top: .8rem;
+  top: 2vh;
   justify-content: end;
   display: flex;
   pointer-events: none;
-  gap: .8rem;
+  gap: 2vh;
+
+  & *  {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
 }
 
 .zoom-btn {
@@ -363,22 +361,31 @@ nav {
   justify-content: center;
   width: fit;
   height: fit;
-  padding: 1rem;
+  padding: 1vw;
   background: rgba(255, 255, 255, 0.9);
   border: 2px solid #247CFF;
-  border-radius: 6px;
   pointer-events: auto;
   cursor: pointer;
-  transition: all 0.2s ease;
+
+  img {
+    height: auto;
+    width: 1.4vw;
+  }
 }
 
 .zoom-btn:hover {
   background: #438fff;
-  transform: translateY(-1px);
 }
 
 .zoom-btn:hover img {
   filter: brightness(0) invert(1);
+  transform: scale(1.4);
+
+}
+
+.zoom-btn:active img:first-child {
+  filter: brightness(0) invert(1);
+  transform: scale(1.2);
 }
 
 .maps-area.dragging {
@@ -394,7 +401,7 @@ nav h1 {
   all: unset;
   font-family: 'Minecraft', sans-serif;
   width: fit-content;
-  font-size: 1.44rem;
+  font-size: 1.8vw;
   align-items: flex-end;
 }
 
@@ -402,14 +409,14 @@ nav h2 {
   all: unset;
   font-family: 'Pixel Operator', sans-serif;
   font-style: normal;
-  font-size: 1.12rem;
+  font-size: 1.6vw;
 }
 
 nav .right {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
+  gap: 1vw;
 }
 
 nav .right .button {
@@ -431,11 +438,11 @@ nav .right .button {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 0.48rem;
-  padding: 0.64rem 0.8rem;
+  gap: 1vw;
+  padding: 1.8vh 1.6vw;
   height: fit-content;
   width: fit-content;
-  transition: all 0.2s;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 nav .right .button:hover {
@@ -447,25 +454,22 @@ nav .right .button:hover {
 }
 
 nav .right img {
-  height: 2.08rem;
+  height: 2.8vw;
 }
 
 nav .right h3 {
   height: fit-content;
   font-family: 'Minecraft', sans-serif;
   font-weight: 100;
-  font-size: 1rem;
+  font-size: 1.2vw;
 }
 
 nav .right h4 {
   height: fit-content;
   font-family: 'Pixel Operator', sans-serif;
-  font-weight: 100;
-  font-size: 1rem;
-}
-
-html {
-  overflow: hidden;
+  font-weight: bold;
+  font-size: 1.1vw;
+  letter-spacing: .01vw;
 }
 
 .sideLeft-container {
@@ -476,47 +480,51 @@ html {
   max-width: 30%;
   height: 91dvh;
   z-index: 3;
-  transform: scale(0) translateX(-100%);
-  transition: transform 0.3s ease-out;
+  transform: translateX(-100%);
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .sideLeft-container.visible {
-  transform: scale(1) translateX(0);
+  transform: translateX(0);
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+
 }
 
 .sideRight-container {
   position: absolute;
+  pointer-events: none;
   top: 0;
   right: 0;
-  width: 320px;
+  width: 24vw;
   height: 91dvh;
   z-index: 3;
-  transform: scale(0) translateX(-200px);
-  transition: all 0.3s ease-out;
+  opacity: 0;
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+
 }
 
 .sideRight-container.visible {
-  transform: scale(1) translateX(0);
+  opacity: 1;
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .kios-detail {
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
-  padding: 0.8rem;
+  gap: 1vw;
   font-family: 'Pixel Operator', sans-serif;
 }
 
 .kios-header {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  margin-bottom: 0.3rem;
+  gap: 1vw;
+  margin-bottom: .6vh;
 }
 
 .kios-profile {
-  width: 40px;
-  height: 40px;
+  width: 4vw;
+  height: 4vw;
   border-radius: 4px;
   object-fit: cover;
 }
@@ -529,20 +537,12 @@ html {
 .kios-title h2 {
   all: unset;
   font-family: 'Minecraft', sans-serif;
-  font-size: 1rem;
-  margin-bottom: 0.1rem;
-}
-
-.kios-id {
-  font-family: 'Minecraft Standard', sans-serif;
-  font-size: 0.7rem;
-  color: #333;
+  font-size: 1.4vw;
 }
 
 .kios-main-image {
   width: 100%;
-  height: 180px;
-  margin: 0.3rem 0;
+  height: 100%;
   border-radius: 6px;
   overflow: hidden;
 }
@@ -552,31 +552,20 @@ html {
   height: 100%;
   object-fit: cover;
 }
-
-.kios-description {
-  margin-bottom: 0.3rem;
-}
-
-.kios-description p {
-  font-size: 0.85rem;
-  line-height: 1.3;
-}
-
 .kios-section {
-  margin-bottom: 0.5rem;
+  margin-bottom: .6vh;
 }
 
 .kios-section h3 {
   all: unset;
   font-family: 'Minecraft', sans-serif;
-  font-size: 0.9rem;
-  margin-bottom: 0.2rem;
+  font-size: 1.2vw;
   display: block;
 }
 
 .kios-section p {
   font-family: 'Pixel Operator', sans-serif;
-  font-size: 1rem;
+  font-size: 1.2vw;
   margin: 0;
   line-height: 1.3;
 }
@@ -585,15 +574,23 @@ html {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  padding: 0.7rem;
-  margin-top: 0.3rem;
+  gap: .8vw;
+  padding: 0.8vw;
+  margin-top: .2vh;
   background: transparent;
   border: 2px solid #000;
   font-family: 'Minecraft', sans-serif;
-  font-size: 0.9rem;
+  font-size: 1.4vw;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: auto;
+
+  span {
+    transform: translateY(.1vw);
+  }
+  &:hover {
+    transform: translateY(-.4vh);
+  }
 }
 
 .lihat-lokasi-btn:hover {
@@ -604,31 +601,38 @@ html {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  padding: 0.7rem;
-  margin-top: 0.3rem;
+  gap: .8vw;
+  padding: 0.8vw;
+  margin-top: .2vh;
   background: transparent;
   border: 2px solid #024196;
   font-family: 'Minecraft', sans-serif;
-  font-size: 0.9rem;
+  font-size: 1.4vw;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   color: #024196;
+  pointer-events: auto;
+
+  span {
+    transform: translateY(.1vw);
+  }
+  &:hover {
+    transform: translateY(-.4vh);
+  }
 }
 
 .download-denah-btn:hover {
   background: #024196;
   color: white;
-  transform: translateY(-1px);
 }
 
 .btn-icon {
-  width: 20px;
-  height: 20px;
+  width: 2vw;
+  height: auto;
 }
 
 .panel {
-  padding: 1.4rem;
+  padding: 1.8vw;
   height: 100%;
   overflow: hidden;
   background: rgba(255, 255, 255, 0.35);
@@ -637,32 +641,32 @@ html {
   box-shadow: 0 4px 24px 0 rgba(0,0,0,0.08);  
 }
 .Box {
-  height: 2.4rem;
-  padding: 0 .4rem;
-  margin-bottom: .6rem;
+  height: fit-content;
+  padding: .8vw;
+  margin-bottom: .6vh;
   border: 1px solid black;
   display: flex;
   align-items: center;
-  gap: .7rem;
+  gap: .8vw;
 }
 
 .-icon {
-  height: 1.5rem;
-  width: 1.5rem;
+  height: auto;
+  width: 1.6vw;
   opacity: 70%;
 }
 
 .close-icon {
-  height: 1.7rem;
-  width: 1.7rem;
-  margin-left: auto;
+  height: auto;
+  width: 1.6vw;
   opacity: 0;
+  margin-left: auto;
   cursor: pointer;
-  transition: opacity 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .close-icon.visible {
-  opacity: 0.7;
+  opacity: 0.8;
 }
 
 .close-icon:hover {
@@ -672,7 +676,7 @@ html {
 .-text {
   all: unset;
   font-family: 'Minecraft Standard', sans-serif;
-  font-size: .8rem;
+  font-size: .8vw;
   line-height: 1.2;
   flex: 1;
   width: 100%;
@@ -689,10 +693,9 @@ html {
 }
 
 .kios-list {
-  padding-right: 1rem;
   display: flex;
   flex-direction: column;
-  gap: .8rem;
+  gap: 1.4vh;
   height: 80dvh;
   overflow-y: auto;
 }
@@ -700,55 +703,50 @@ html {
 .kios-item {
   display: flex;
   align-items: center;
-  padding: .4rem .4rem;
+  padding: .8vh .8vw;
   border-left: 6px solid #d3d3d3;
-  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
+  overflow: hidden;
   border-radius: 6px;
   outline: none;
   user-select: none;
 }
 .kios-item:hover > .kios-info,
 .kios-item:focus > .kios-info {
-  transform: translateX(2px);
-}
-
-.kios-item-aktif {
-  border-left: 6px solid #024196;
+  transform: translateX(.4vw);
 }
 
 .kios-img {
-  width: 48px;
   height: auto;
+  width: 3.4vw;
   object-fit: cover;
   border-radius: 2px;
-  margin-right: 1rem;
+  margin-right: 1vw;
 }
 
 .kios-info {
   flex: 1;
   width: fit-content;
-  width: 60%;
   display: flex;
   flex-direction: column;
-  transition: all 0.2s ease-in-out;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .kios-nama {
   all: unset;
   width: fit-content;
   font-family: 'Minecraft', 'Pixel Operator', sans-serif;
-  font-size: 1rem;
+  font-size: 1.2vw;
 }
 
 .kios-desc {
   all: unset;
   width: fit-content;
   font-family: 'Pixel Operator', sans-serif;
-  font-size: 1rem;
+  font-size: 1vw;
   width: 100%;
   opacity: 0.6;
-  margin-right: 1rem;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -759,28 +757,9 @@ html {
   all: unset;
   width: fit-content;
   font-family: 'Minecraft Standard', sans-serif;
-  font-size: .6rem;
+  font-size: .8vw;
   font-weight: bold;
   color: #222;
-}
-
-.loading-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  height: 200px;
-}
-
-.loading-spinner {
-  width: 10px;
-  height: 10px;
-  border: 3px solid #f3f3f3;
-  border-top: 3px solid #3498db;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-bottom: 10px;
 }
 
 @keyframes spin {
@@ -800,20 +779,16 @@ html {
 
 .-results-info {
   display: flex;
-  gap: .8rem;
+  gap: 4vw;
   border-radius: 6px;
-  margin: 0.6rem 0;
+  margin: 2vh 0;
   font-family: 'Pixel Operator', sans-serif;
-  font-size: 1rem;
+  font-size: 1.2vw;
   color: #333;
 }
 
-.-results-info p {
-  margin: 0;
-}
-
 /* Efek highlight saat hover di item kios */
-.kios-item:hover {
+.kios-item:hover:not(.kios-item-aktif) {
   background-color: rgba(21, 161, 200, 0.1);
   border-left-color: #024196;
 }
@@ -918,7 +893,7 @@ html {
   font-size: 0.9rem;
   cursor: pointer;
   border-radius: 6px;
-  transition: all 0.2s;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .retry-btn:hover {
@@ -1445,8 +1420,6 @@ onMounted(() => {
 
 onUnmounted(() => {
   window.removeEventListener('keydown', handleKeyDown);
-  
-  // Matikan pembaruan otomatis saat meninggalkan halaman
   stopAutoRefresh();
 });
 

@@ -318,6 +318,7 @@ async function handleSaveKiosConfig() {
       }
 
       // Sync panel state setelah simpan
+      await fetchAllPenjual();
       syncPanelData({ ...(cached || {}), ...updated });
       toast.success('Perubahan berhasil disimpan.');
     }
@@ -499,7 +500,7 @@ async function fetchAllPenjual() {
   } catch (err) {
     console.error("Error mengambil data penjual:", err);
     toast.error("Gagal mengambil data penjual");
-  } finally {    
+  } finally {
     JsLoadingOverlay.hide();
     isLoading.value = false;
   }
@@ -762,7 +763,7 @@ const removeFotoKiosDraft = () => {
   <div class="body-wrapper">
   <!-- Tombol Aksi - Header -->
   <div class="upperButtonMenu marginbttm">
-    <div class="button" @click="this.$router.replace('/logout');"
+    <div class="button" @click="this.$router.replace('/admin/edit-map');"
       style="--border-color: #ff5b5b; --bg-color: #ff5b5b; --bg-hov: #f54f4f; --border-hov: #f54f4f; --color: #fff; --sub-color: #fff;">
         <img src="/icons/drought.svg" alt="Icon" width="auto" height="100%">
       <div class="text">
@@ -1535,7 +1536,7 @@ const removeFotoKiosDraft = () => {
   padding: .4rem .4rem;
   box-shadow: 0 0 0 2px #fff, 2px 2px 0 0 #bfcad6;
   border-left: 6px solid #d3d3d3;
-  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   border-radius: 6px;
   gap: 0.8rem;
@@ -1570,6 +1571,8 @@ const removeFotoKiosDraft = () => {
   display: flex;
   flex-direction: column;
   transition: all 0.2s ease-in-out;
+  width: 80%;
+  overflow: hidden;
 }
 
 .kios-nama {

@@ -88,9 +88,9 @@ const buttonStyle = computed(() => {
   border: none;
   border-radius: 10px;
   padding: 10px 20px;
-  font-size: 15px;
+  font-size: 1vw;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   min-width: 120px;
 
 }

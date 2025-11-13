@@ -11,7 +11,7 @@ const activeToasts = []
 const baseStyle = `
   border-radius: 10px;
   font-family: 'Inter', system-ui, sans-serif;
-  font-size: 0.95rem;
+  font-size: 1.2vw;
   font-weight: 500;
   display: flex;
   align-items: center;
